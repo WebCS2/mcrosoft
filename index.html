@@ -10,6 +10,7 @@
         background-color: #0076D6;
         color: white;
         font-family: Arial, sans-serif;
+        overflow: hidden;
     }
 
     .content {
@@ -23,12 +24,20 @@
         top: 50%;
         right: 20px;
         transform: translateY(-50%);
-        max-width: 220px;
+        max-width: 240px;
         height: auto;
+
         background: transparent;
+        border: none;
+        outline: none;
+        box-shadow: none;
+
         display: block;
         user-select: none;
         pointer-events: none;
+
+        image-rendering: auto;
+        -webkit-user-drag: none;
     }
 </style>
 </head>
@@ -40,7 +49,9 @@
     <p>Top-left white text on your custom blue.</p>
 </div>
 
-<img class="right-image" src="https://www.image2url.com/r2/default/images/1776872912794-bd93d864-f41d-4322-a7c7-e04a7a3e4daa.png" alt="image">
+<img class="right-image"
+     src="https://www.image2url.com/r2/default/images/1776873344100-4480d136-381f-4dc5-b7da-933cab6056c3.png"
+     alt="image">
 
 <script>
 function goFullscreen() {
