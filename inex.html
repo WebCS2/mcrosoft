@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Fullscreen</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Welcome</h1>
+
+<script>
+  function goFullscreen() {
+    const elem = document.documentElement;
+
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // Safari
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE11
+      elem.msRequestFullscreen();
+    }
+  }
+
+  // Try immediately
+  goFullscreen();
+
+  // Fallback: trigger on user interaction (required by most browsers)
+  document.addEventListener("click", goFullscreen);
+</script>
+
+</body>
+</html>
