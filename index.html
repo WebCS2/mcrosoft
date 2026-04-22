@@ -1,54 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fullscreen + Frame</title>
-  <style>
+<meta charset="UTF-8">
+<title>Fullscreen Blue Page</title>
+
+<style>
     body {
-      margin: 0;
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      cursor: pointer;
+        margin: 0;
+        background-color: blue;
+        color: white;
+        font-family: Arial, sans-serif;
     }
 
-    #frame {
-      display: none;
-      border: 10px solid red;
-      padding: 50px 100px;
-      color: white;
-      font-size: 40px;
-      text-align: center;
+    .content {
+        position: absolute;
+        top: 10px;
+        left: 10px;
     }
-  </style>
+</style>
 </head>
-<body>
 
-<div id="frame">Hi</div>
+<body onclick="goFullscreen()">
+
+<div class="content">
+    <h1>Hello</h1>
+    <p>This is top-left white text on a blue background.</p>
+</div>
 
 <script>
-  function goFullscreenAndShow() {
+function goFullscreen() {
     const elem = document.documentElement;
 
     if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      elem.msRequestFullscreen();
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // Safari
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE11
+        elem.msRequestFullscreen();
     }
+}
 
-    // Show the red frame
-    document.getElementById("frame").style.display = "block";
-
-    // Remove click event so it only happens once
-    document.removeEventListener("click", goFullscreenAndShow);
-  }
-
-  document.addEventListener("click", goFullscreenAndShow);
+// Try automatically on load (may require user interaction in most browsers)
+window.onload = () => {
+    goFullscreen();
+};
 </script>
 
 </body>
