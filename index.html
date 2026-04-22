@@ -2,42 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Auto Fullscreen</title>
+  <title>Fullscreen + Frame</title>
   <style>
     body {
       margin: 0;
       background: black;
-      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       font-family: Arial, sans-serif;
+      cursor: pointer;
+    }
+
+    #frame {
+      display: none;
+      border: 10px solid red;
+      padding: 50px 100px;
+      color: white;
+      font-size: 40px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-<h1>Welcome</h1>
+<div id="frame">Hi</div>
 
 <script>
-  function goFullscreen() {
+  function goFullscreenAndShow() {
     const elem = document.documentElement;
 
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) { // Safari
+    } else if (elem.webkitRequestFullscreen) {
       elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { // IE11
+    } else if (elem.msRequestFullscreen) {
       elem.msRequestFullscreen();
     }
+
+    // Show the red frame
+    document.getElementById("frame").style.display = "block";
+
+    // Remove click event so it only happens once
+    document.removeEventListener("click", goFullscreenAndShow);
   }
 
-  // Try immediately
-  goFullscreen();
-
-  // Fallback: trigger on user interaction (required by most browsers)
-  document.addEventListener("click", goFullscreen);
+  document.addEventListener("click", goFullscreenAndShow);
 </script>
 
 </body>
