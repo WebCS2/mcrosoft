@@ -103,61 +103,10 @@
   <button id="respawn-btn">Respawn</button>
 </div>
 
+<!-- Socket.IO client -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
 <script>
-/* ========== SIMPLE MULTIPLAYER (CLIENT) ========== */
-/* Change this to your WebSocket server URL when you have one */
-const WS_URL = "wss://your-multiplayer-server.example.com";
-
-let socket = null;
-const myId = Math.random().toString(36).slice(2);
-const others = {}; // id -> {x,y,name,mod}
-
-/* Safe send */
-function sendPacket(obj){
-  if(socket && socket.readyState === WebSocket.OPEN){
-    socket.send(JSON.stringify(obj));
-  }
-}
-
-function initMultiplayer(){
-  try{
-    socket = new WebSocket(WS_URL);
-  }catch(e){
-    console.warn("WebSocket not available yet, running local only.");
-    return;
-  }
-
-  socket.onopen = () => {
-    sendPacket({ type:"join", id:myId, name:playerName, mod:isMod });
-  };
-
-  socket.onmessage = (ev) => {
-    let p;
-    try{ p = JSON.parse(ev.data); }catch{ return; }
-    if(!p || p.id === myId) return;
-
-    if(p.type === "join" || p.type === "state" || p.type === "move"){
-      if(!others[p.id]) others[p.id] = { x:0, y:0, name:p.name, mod:p.mod };
-      others[p.id].x = p.x ?? others[p.id].x;
-      others[p.id].y = p.y ?? others[p.id].y;
-      others[p.id].name = p.name ?? others[p.id].name;
-      others[p.id].mod = p.mod ?? others[p.id].mod;
-    } else if(p.type === "leave"){
-      delete others[p.id];
-    } else if(p.type === "chat"){
-      addChat(p.name, p.msg, p.mod);
-    }
-  };
-
-  socket.onclose = () => {
-    console.log("Disconnected from multiplayer server.");
-  };
-
-  window.addEventListener("beforeunload", () => {
-    sendPacket({ type:"leave", id:myId });
-  });
-}
-
 /* ========== COOKIES + NAME ========== */
 function setCookie(name,value,days=365){
   const d=new Date();
@@ -237,19 +186,65 @@ function addChat(name,text,mod){
   chatBox.scrollTop=chatBox.scrollHeight;
 }
 
+/* ========== MULTIPLAYER (Socket.IO) ========== */
+// change this to your deployed server URL (e.g. https://pixeliaworlds-server.onrender.com)
+const socket = io("https://your-multiplayer-server-url.com", {
+  transports: ["websocket"]
+});
+
+let myId = null;
+const others = {}; // socketId -> {x,y,name,mod}
+
+socket.on("connect", () => {
+  myId = socket.id;
+  socket.emit("join", {
+    name: playerName,
+    mod: isMod,
+    x: player.x,
+    y: player.y
+  });
+});
+
+socket.on("world-state", (players) => {
+  // full sync from server
+  for (const id in players) {
+    if (id === myId) continue;
+    others[id] = players[id];
+  }
+});
+
+socket.on("player-joined", (p) => {
+  if (p.id === myId) return;
+  others[p.id] = p;
+});
+
+socket.on("player-moved", (p) => {
+  if (p.id === myId) return;
+  if (!others[p.id]) others[p.id] = p;
+  others[p.id].x = p.x;
+  others[p.id].y = p.y;
+  others[p.id].name = p.name;
+  others[p.id].mod = p.mod;
+});
+
+socket.on("player-left", (id) => {
+  delete others[id];
+});
+
+socket.on("chat", (m) => {
+  addChat(m.name, m.msg, m.mod);
+});
+
+/* ========== CHAT INPUT (with network) ========== */
 chatInput.addEventListener("keydown",e=>{
   if(e.key==="Enter"){
     if(player.banned) return;
     const msg=chatInput.value.trim();
     if(msg!==""){
-      // local
       addChat(playerName,msg,isMod);
-      // multiplayer
-      sendPacket({
-        type:"chat",
-        id:myId,
-        name:playerName,
-        mod:isMod,
+      socket.emit("chat", {
+        name: playerName,
+        mod: isMod,
         msg
       });
       chatInput.value="";
@@ -353,15 +348,15 @@ function updatePlayer(){
     addChat("SYSTEM","You fell and respawned.",false);
   }
 
-  // broadcast position
-  sendPacket({
-    type:"move",
-    id:myId,
-    name:playerName,
-    mod:isMod,
-    x:player.x,
-    y:player.y
-  });
+  // send position to server
+  if (socket && socket.connected) {
+    socket.emit("move", {
+      x: player.x,
+      y: player.y,
+      name: playerName,
+      mod: isMod
+    });
+  }
 }
 
 /* ========== DRAW ========== */
@@ -442,9 +437,6 @@ function loop(){
   drawRespawn();
   requestAnimationFrame(loop);
 }
-
-/* start */
-initMultiplayer();
 loop();
 </script>
 </body>
