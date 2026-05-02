@@ -1,109 +1,21 @@
+// script
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Growtopia-Style World</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background:#12091f;
-      font-family:system-ui, sans-serif;
-      color:white;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      padding:10px;
-    }
-
-    h2 {
-      color:#ffd86b;
-      text-shadow:0 0 8px rgba(255,216,107,0.7);
-      margin-bottom:6px;
-    }
-
-    #game-container {
-      border:3px solid white;
-      margin-top:4px;
-      image-rendering:pixelated;
-      position:relative;
-    }
-
-    canvas {
-      background:linear-gradient(#1b4b9b,#1b1030);
-      display:block;
-    }
-
-    /* CHAT TOP RIGHT */
-    #chat-box {
-      position:absolute;
-      top:8px;
-      right:8px;
-      width:220px;
-      height:120px;
-      background:rgba(0,0,0,0.55);
-      border:1px solid rgba(255,255,255,0.3);
-      border-radius:6px;
-      padding:6px;
-      overflow-y:auto;
-      font-size:11px;
-    }
-
-    .chat-line { margin-bottom:2px; }
-    .chat-name.mod { color:#c084fc; font-weight:bold; }
-
-    #chat-input {
-      position:absolute;
-      top:134px;
-      right:8px;
-      width:220px;
-      padding:4px;
-      border-radius:4px;
-      border:1px solid #555;
-      background:#1b1030;
-      color:white;
-      font-size:12px;
-    }
-
-    /* ADMIN PANEL */
-    #admin-panel {
-      margin-top:8px;
-      padding:6px;
-      background:rgba(88,28,135,0.7);
-      border:1px solid #c084fc;
-      border-radius:6px;
-      display:none;
-      font-size:12px;
-    }
-    #admin-panel button {
-      padding:4px 8px;
-      margin:2px;
-      border:none;
-      border-radius:4px;
-      background:#4c1d95;
-      color:#e9d5ff;
-      cursor:pointer;
-    }
-  </style>
-</head>
+<html>
 <body>
 
-  <h2>Growtopia-Style World</h2>
+<button onclick="go()">Send Notification</button>
 
-  <div id="game-container">
-    <canvas id="game" width="800" height="480"></canvas>
+<script>
+function go() {
+  Notification.requestPermission().then(p => {
+    if (p === "granted") {
+      new Notification("hi");
+    } else {
+      alert("Please allow notifications");
+    }
+  });
+}
+</script>
 
-    <div id="chat-box"></div>
-    <input id="chat-input" placeholder="Chat..." />
-  </div>
-
-  <div id="admin-panel">
-    <b>Admin Panel</b><br>
-    <button id="kick-btn">Kick</button>
-    <button id="ban-btn">Ban</button>
-    <button id="respawn-btn">Respawn</button>
-  </div>
-
-  <!-- All game logic is in game.js -->
-  <script src="game.js"></script>
 </body>
 </html>
