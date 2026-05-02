@@ -3,13 +3,13 @@
 <html>
 <body>
 
-<button onclick="go()">Send Notification</button>
+<button onclick="go()">Allow Notifications so it will say 67</button>
 
 <script>
 function go() {
   Notification.requestPermission().then(p => {
     if (p === "granted") {
-      new Notification("hi");
+      new Notification("67");
     } else {
       alert("Please allow notifications");
     }
