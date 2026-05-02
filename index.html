@@ -104,6 +104,60 @@
 </div>
 
 <script>
+/* ========== SIMPLE MULTIPLAYER (CLIENT) ========== */
+/* Change this to your WebSocket server URL when you have one */
+const WS_URL = "wss://your-multiplayer-server.example.com";
+
+let socket = null;
+const myId = Math.random().toString(36).slice(2);
+const others = {}; // id -> {x,y,name,mod}
+
+/* Safe send */
+function sendPacket(obj){
+  if(socket && socket.readyState === WebSocket.OPEN){
+    socket.send(JSON.stringify(obj));
+  }
+}
+
+function initMultiplayer(){
+  try{
+    socket = new WebSocket(WS_URL);
+  }catch(e){
+    console.warn("WebSocket not available yet, running local only.");
+    return;
+  }
+
+  socket.onopen = () => {
+    sendPacket({ type:"join", id:myId, name:playerName, mod:isMod });
+  };
+
+  socket.onmessage = (ev) => {
+    let p;
+    try{ p = JSON.parse(ev.data); }catch{ return; }
+    if(!p || p.id === myId) return;
+
+    if(p.type === "join" || p.type === "state" || p.type === "move"){
+      if(!others[p.id]) others[p.id] = { x:0, y:0, name:p.name, mod:p.mod };
+      others[p.id].x = p.x ?? others[p.id].x;
+      others[p.id].y = p.y ?? others[p.id].y;
+      others[p.id].name = p.name ?? others[p.id].name;
+      others[p.id].mod = p.mod ?? others[p.id].mod;
+    } else if(p.type === "leave"){
+      delete others[p.id];
+    } else if(p.type === "chat"){
+      addChat(p.name, p.msg, p.mod);
+    }
+  };
+
+  socket.onclose = () => {
+    console.log("Disconnected from multiplayer server.");
+  };
+
+  window.addEventListener("beforeunload", () => {
+    sendPacket({ type:"leave", id:myId });
+  });
+}
+
 /* ========== COOKIES + NAME ========== */
 function setCookie(name,value,days=365){
   const d=new Date();
@@ -188,7 +242,16 @@ chatInput.addEventListener("keydown",e=>{
     if(player.banned) return;
     const msg=chatInput.value.trim();
     if(msg!==""){
+      // local
       addChat(playerName,msg,isMod);
+      // multiplayer
+      sendPacket({
+        type:"chat",
+        id:myId,
+        name:playerName,
+        mod:isMod,
+        msg
+      });
       chatInput.value="";
     }
   }
@@ -266,7 +329,7 @@ function updatePlayer(){
     player.onGround=false;
   }
 
-  // Gravity (still applies to mod unless you want full fly)
+  // Gravity
   player.vy+=0.5;
   if(player.vy>12) player.vy=12;
 
@@ -289,6 +352,16 @@ function updatePlayer(){
     respawn(true);
     addChat("SYSTEM","You fell and respawned.",false);
   }
+
+  // broadcast position
+  sendPacket({
+    type:"move",
+    id:myId,
+    name:playerName,
+    mod:isMod,
+    x:player.x,
+    y:player.y
+  });
 }
 
 /* ========== DRAW ========== */
@@ -334,12 +407,29 @@ function drawPlayer(){
   ctx.fillStyle="#000";
   ctx.fillRect(px+7,py-9,3,3);
   ctx.fillRect(px+14,py-9,3,3);
-  // test
+
   // Name
   ctx.font="12px system-ui";
   ctx.textAlign="center";
   ctx.fillStyle=isMod?"#c084fc":"white";
   ctx.fillText(isMod?"@PixelX (MOD)":playerName,px+player.w/2,py-18);
+}
+
+function drawOthers(){
+  for(const id in others){
+    const op = others[id];
+    const px = op.x;
+    const py = op.y;
+
+    ctx.fillStyle = op.mod ? "#c084fc" : "#00ff99";
+    ctx.fillRect(px,py,player.w,player.h);
+
+    ctx.font="12px system-ui";
+    ctx.textAlign="center";
+    ctx.fillStyle=op.mod?"#c084fc":"white";
+    const label = op.mod ? `@${op.name} (MOD)` : op.name;
+    ctx.fillText(label,px+player.w/2,py-18);
+  }
 }
 
 /* ========== LOOP ========== */
@@ -348,9 +438,13 @@ function loop(){
   drawWorld();
   updatePlayer();
   drawPlayer();
+  drawOthers();
   drawRespawn();
   requestAnimationFrame(loop);
 }
+
+/* start */
+initMultiplayer();
 loop();
 </script>
 </body>
