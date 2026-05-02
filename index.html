@@ -1,62 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chat World</title>
+  <title>Mini Pixel World</title>
   <style>
-    body { font-family: Arial; text-align: center; }
-    #chat { height: 300px; overflow-y: scroll; border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; }
-    input { padding: 8px; margin: 5px; }
-    button { padding: 8px 12px; }
+    body { margin:0; font-family:Arial; }
+    #game { border:1px solid black; display:block; }
+    #chat { height:120px; overflow-y:scroll; border-top:1px solid #ccc; }
   </style>
 </head>
 <body>
 
-<h1>🌍 Chat World</h1>
+<canvas id="game" width="500" height="300"></canvas>
 
-<div id="login">
-  <input id="nameInput" placeholder="Enter your name">
+<div>
+  <input id="name" placeholder="Name">
   <button onclick="join()">Join</button>
 </div>
 
-<div id="chatUI" style="display:none;">
+<div id="ui" style="display:none;">
+  <div>Online: <span id="online">0</span></div>
   <div id="chat"></div>
-  <input id="messageInput" placeholder="Type a message">
-  <button onclick="sendMessage()">Send</button>
+  <input id="msg">
+  <button onclick="send()">Send</button>
 </div>
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
-  const socket = io("http://localhost:3001");
+const socket = io("http://localhost:3001");
 
-  let name = "";
+let player = {x:50,y:50};
+let name = "";
+let players = {};
+let blocks = {};
 
-  function join() {
-    name = document.getElementById("nameInput").value;
-    if (!name) return;
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-    socket.emit("join", name);
+function join(){
+  name = document.getElementById("name").value;
+  socket.emit("join", name);
+  document.getElementById("ui").style.display="block";
+}
 
-    document.getElementById("login").style.display = "none";
-    document.getElementById("chatUI").style.display = "block";
+document.addEventListener("keydown", e=>{
+  if(e.key==="w") player.y-=5;
+  if(e.key==="s") player.y+=5;
+  if(e.key==="a") player.x-=5;
+  if(e.key==="d") player.x+=5;
+
+  socket.emit("move", player);
+});
+
+canvas.addEventListener("click", e=>{
+  let x = Math.floor(e.offsetX/20);
+  let y = Math.floor(e.offsetY/20);
+
+  if(blocks[x+","+y]){
+    delete blocks[x+","+y]; // break
+  } else {
+    blocks[x+","+y]=1; // place
+  }
+});
+
+function send(){
+  let msg = document.getElementById("msg").value;
+  socket.emit("chat",{name,msg});
+}
+
+socket.on("players", data=>{
+  players = data;
+  document.getElementById("online").innerText = Object.keys(players).length;
+});
+
+socket.on("chat", data=>{
+  let div=document.createElement("div");
+  div.innerText=data.name+": "+data.msg;
+  document.getElementById("chat").appendChild(div);
+});
+
+function draw(){
+  ctx.clearRect(0,0,500,300);
+
+  // blocks
+  for(let b in blocks){
+    let [x,y]=b.split(",");
+    ctx.fillRect(x*20,y*20,20,20);
   }
 
-  function sendMessage() {
-    const messageInput = document.getElementById("messageInput");
-    const message = messageInput.value;
-
-    if (!message) return;
-
-    socket.emit("chat", { name, message });
-    messageInput.value = "";
+  // players
+  for(let id in players){
+    let p=players[id];
+    ctx.fillStyle="red";
+    ctx.fillRect(p.x,p.y,10,10);
   }
 
-  socket.on("chat", (data) => {
-    const chat = document.getElementById("chat");
-    const div = document.createElement("div");
-    div.innerHTML = "<b>" + data.name + ":</b> " + data.message;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-  });
+  requestAnimationFrame(draw);
+}
+draw();
 </script>
 
 </body>
