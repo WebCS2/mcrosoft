@@ -1,248 +1,1073 @@
-/* ========== COOKIES + NAME ========== */
-function setCookie(name,value,days=365){
-  const d=new Date();
-  d.setTime(d.getTime()+days*24*60*60*1000);
-  document.cookie=name+"="+encodeURIComponent(value)+";expires="+d.toUTCString()+";path=/";
-}
-function getCookie(name){
-  const n=name+"=";
-  const ca=document.cookie.split(";");
-  for(let c of ca){
-    c=c.trim();
-    if(c.indexOf(n)===0) return decodeURIComponent(c.substring(n.length));
-  }
-  return "";
-}
-
-let playerName=getCookie("gt_name");
-if(!playerName){
-  playerName=prompt("Enter your name:");
-  if(!playerName || playerName.trim()==="") playerName="Guest";
-  setCookie("gt_name",playerName);
-}
-let isMod=(playerName==="PixelX");
-
-/* ========== GAME SETUP ========== */
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
-
-const TILE=32;
-const WORLD_W=25;
-const WORLD_H=15;
-
-const world=[];
-for(let y=0;y<WORLD_H;y++){
-  world[y]=[];
-  for(let x=0;x<WORLD_W;x++){
-    if(y>10) world[y][x]=2;
-    else if(y>8) world[y][x]=1;
-    else world[y][x]=0;
-  }
-}
-
-const spawn={x:5*TILE,y:5*TILE};
-
-const player={
-  x:spawn.x,
-  y:spawn.y,
-  w:24,
-  h:32,
-  vx:0,
-  vy:0,
-  speed:3,
-  jump:-9,
-  onGround:false,
-  alive:true,
-  banned:false
-};
-
-const keys={};
-window.addEventListener("keydown",e=>{
-  keys[e.key.toLowerCase()]=true;
-});
-window.addEventListener("keyup",e=>{
-  keys[e.key.toLowerCase()]=false;
-});
-
-/* ========== CHAT ========== */
-const chatBox=document.getElementById("chat-box");
-const chatInput=document.getElementById("chat-input");
-
-function addChat(name,text,mod){
-  const line=document.createElement("div");
-  line.className="chat-line";
-  const safeText=text.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  line.innerHTML=`<span class="chat-name ${mod?"mod":""}">${mod?"@PixelX (MOD)":name}</span>: ${safeText}`;
-  chatBox.appendChild(line);
-  chatBox.scrollTop=chatBox.scrollHeight;
-}
-
-chatInput.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    if(player.banned) return;
-    const msg=chatInput.value.trim();
-    if(msg!==""){
-      addChat(playerName,msg,isMod);
-      chatInput.value="";
-    }
-  }
-});
-
-/* ========== ADMIN PANEL ========== */
-const adminPanel=document.getElementById("admin-panel");
-if(isMod) adminPanel.style.display="block";
-
-document.getElementById("kick-btn").onclick=()=>{
-  player.alive=false;
-  addChat("SYSTEM","You were kicked.",false);
-};
-document.getElementById("ban-btn").onclick=()=>{
-  player.banned=true;
-  addChat("SYSTEM","You are banned.",false);
-};
-document.getElementById("respawn-btn").onclick=()=>{
-  respawn(true);
-  addChat("SYSTEM","Respawned.",false);
-};
-
-/* ========== COLLISION ========== */
-function solid(id){ return id===1||id===2; }
-
-function collide(x,y,w,h){
-  const x0=Math.floor(x/TILE);
-  const y0=Math.floor(y/TILE);
-  const x1=Math.floor((x+w)/TILE);
-  const y1=Math.floor((y+h)/TILE);
-  for(let ty=y0;ty<=y1;ty++){
-    for(let tx=x0;tx<=x1;tx++){
-      if(tx<0||ty<0||tx>=WORLD_W||ty>=WORLD_H) continue;
-      if(solid(world[ty][tx])) return true;
-    }
-  }
-  return false;
-}
-
-/* ========== RESPAWN EFFECT ========== */
-let respawnTimer=0;
-function respawn(effect){
-  player.x=spawn.x;
-  player.y=spawn.y;
-  player.vx=0;
-  player.vy=0;
-  player.alive=true;
-  if(effect) respawnTimer=40;
-}
-
-/* ========== UPDATE PLAYER ========== */
-function updatePlayer(){
-  if(!player.alive || player.banned) return;
-
-  // MOD vertical move by blocks
-  if(isMod){
-    if(keys["w"]){
-      player.y -= TILE;
-      keys["w"]=false; // one step per press
-    }
-    if(keys["s"]){
-      player.y += TILE;
-      keys["s"]=false;
-    }
-  }
-
-  // Horizontal movement
-  player.vx=0;
-  if(keys["a"]) player.vx=-player.speed;
-  if(keys["d"]) player.vx=player.speed;
-
-  // Jump only for non-mod or when not using mod-fly
-  if(keys["w"] && player.onGround && !isMod){
-    player.vy=player.jump;
-    player.onGround=false;
-  }
-
-  // Gravity (still applies to mod unless you want full fly)
-  player.vy+=0.5;
-  if(player.vy>12) player.vy=12;
-
-  // Move X
-  let nx=player.x+player.vx;
-  if(!collide(nx,player.y,player.w,player.h)) player.x=nx;
-
-  // Move Y
-  let ny=player.y+player.vy;
-  if(!collide(player.x,ny,player.w,player.h)){
-    player.y=ny;
-    player.onGround=false;
-  } else {
-    if(player.vy>0) player.onGround=true;
-    player.vy=0;
-  }
-
-  // Fell off map
-  if(player.y>canvas.height+200){
-    respawn(true);
-    addChat("SYSTEM","You fell and respawned.",false);
-  }
-}
-
-/* ========== DRAW ========== */
-function drawWorld(){
-  for(let y=0;y<WORLD_H;y++){
-    for(let x=0;x<WORLD_W;x++){
-      const id=world[y][x];
-      if(id===0) continue;
-      ctx.fillStyle=(id===1)?"#7b4f2c":"#555";
-      ctx.fillRect(x*TILE,y*TILE,TILE,TILE);
-    }
-  }
-}
-
-function drawRespawn(){
-  if(respawnTimer<=0) return;
-  const t=respawnTimer/40;
-  const r=60*(1-t);
-  ctx.save();
-  ctx.globalAlpha=t;
-  ctx.beginPath();
-  ctx.arc(player.x+player.w/2,player.y+player.h/2,r,0,Math.PI*2);
-  ctx.strokeStyle="#a855f7";
-  ctx.lineWidth=4;
-  ctx.stroke();
-  ctx.restore();
-  respawnTimer--;
-}
-
-function drawPlayer(){
-  if(!player.alive) return;
-  const px=player.x, py=player.y;
-
-  // Body
-  ctx.fillStyle="#00c8ff";
-  ctx.fillRect(px,py,player.w,player.h);
-
-  // Head
-  ctx.fillStyle="#ffe0b3";
-  ctx.fillRect(px+4,py-12,16,12);
-
-  // Eyes
-  ctx.fillStyle="#000";
-  ctx.fillRect(px+7,py-9,3,3);
-  ctx.fillRect(px+14,py-9,3,3);
-
-  // Name
-  ctx.font="12px system-ui";
-  ctx.textAlign="center";
-  ctx.fillStyle=isMod?"#c084fc":"white";
-  ctx.fillText(isMod?"@PixelX (MOD)":playerName,px+player.w/2,py-18);
-}
-
-/* ========== LOOP ========== */
-function loop(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  drawWorld();
-  updatePlayer();
-  drawPlayer();
-  drawRespawn();
-  requestAnimationFrame(loop);
-}
-loop();
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
+// old file dont needed
