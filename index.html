@@ -1,21 +1,126 @@
-// script
 <!DOCTYPE html>
-<html>
-<body>
-
-<button onclick="go()">Allow Notifications so it will say 67</button>
-
-<script>
-function go() {
-  Notification.requestPermission().then(p => {
-    if (p === "granted") {
-      new Notification("67");
-    } else {
-      alert("Please allow notifications");
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pixel Worlds Multiplayer Prototype</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: #eee;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
     }
-  });
-}
-</script>
+    #ui {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    #ui input {
+      background: #222;
+      border: 1px solid #555;
+      color: #eee;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    #ui button {
+      background: #3b82f6;
+      border: none;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    #ui button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    #chat {
+      position: fixed;
+      right: 10px;
+      top: 10px;
+      width: 220px;
+      max-height: 40vh;
+      background: rgba(0,0,0,0.7);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+    }
+    #chat-log {
+      flex: 1;
+      padding: 6px;
+      overflow-y: auto;
+    }
+    #chat-input-row {
+      display: flex;
+      border-top: 1px solid #333;
+    }
+    #chat-input {
+      flex: 1;
+      border: none;
+      padding: 4px;
+      font-size: 12px;
+      background: #111;
+      color: #eee;
+      border-radius: 0 0 0 6px;
+    }
+    #chat-send {
+      border: none;
+      padding: 4px 8px;
+      font-size: 12px;
+      background: #22c55e;
+      color: #fff;
+      border-radius: 0 0 6px 0;
+      cursor: pointer;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <div><b>Pixel Worlds MP (Prototype)</b></div>
+    <div style="margin-top:4px;">
+      Name:
+      <input id="name-input" placeholder="Your name" size="10" />
+    </div>
+    <div style="margin-top:4px;">
+      Room:
+      <input id="room-input" placeholder="room-1" size="8" />
+      <button id="join-btn">Join</button>
+    </div>
+    <div style="margin-top:4px;">
+      <span id="status">Not connected</span>
+    </div>
+    <div style="margin-top:4px;">
+      <b>Controls:</b> WASD / Arrows to move, Space to place/remove block
+    </div>
+  </div>
 
+  <div id="chat">
+    <div id="chat-log"></div>
+    <div id="chat-input-row">
+      <input id="chat-input" placeholder="Type message..." />
+      <button id="chat-send">Send</button>
+    </div>
+  </div>
+
+  <canvas id="game" width="960" height="540"></canvas>
+
+  <!-- NetplayJS (P2P multiplayer helper) -->
+  <script src="https://unpkg.com/netplayjs@0.4.1/dist/netplay.js"
+          integrity="sha384-6Yb8LWAT488jwK+nIjvD4S5/poq1Xn69NYjH1RXKHoaUOaFJrKQ1rfGQgKm8oQjX"
+          crossorigin="anonymous"></script>
+
+  <!-- Your game logic -->
+  <script src="game.js"></script>
 </body>
 </html>
