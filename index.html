@@ -1,256 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Pixel Worlds Global</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body {
-      margin: 0;
-      background: #050816;
-      color: #eee;
-      font-family: system-ui, sans-serif;
-      overflow: hidden;
-    }
-    canvas {
-      display: block;
-      touch-action: none;
-    }
-    #name-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
+    body { margin:0; background:#050816; overflow:hidden; font-family:sans-serif; }
+
+    canvas { display:block; touch-action:none; }
+
+    /* NAME SCREEN */
+    #name-screen {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.85);
+      display:flex; align-items:center; justify-content:center;
+      z-index:50;
     }
     #name-box {
-      background: #111827;
-      padding: 16px 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-      max-width: 280px;
-      width: 90%;
-      text-align: center;
-    }
-    #name-box h2 {
-      margin: 0 0 8px;
-      font-size: 18px;
+      background:#111827; padding:20px; border-radius:10px;
+      width:260px; text-align:center;
     }
     #name-input {
-      width: 100%;
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 14px;
-      margin-top: 6px;
+      width:100%; padding:8px; margin-top:10px;
+      border-radius:6px; border:1px solid #444;
+      background:#000; color:#fff;
     }
-    #name-confirm {
-      margin-top: 10px;
-      width: 100%;
-      padding: 6px 0;
-      border-radius: 6px;
-      border: none;
-      background: #22c55e;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 14px;
+    #name-btn {
+      margin-top:10px; width:100%; padding:8px;
+      background:#22c55e; border:none; border-radius:6px;
+      color:white; font-weight:bold; cursor:pointer;
     }
-    #status {
-      position: fixed;
-      top: 8px;
-      left: 8px;
-      padding: 4px 8px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 6px;
-      font-size: 11px;
-      z-index: 5;
-    }
+
+    /* CHAT */
     #chat {
-      position: fixed;
-      right: 8px;
-      top: 8px;
-      width: 220px;
-      max-height: 45vh;
-      background: rgba(0,0,0,0.7);
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
-      font-size: 11px;
-      z-index: 5;
+      position:fixed; right:10px; top:10px;
+      width:220px; height:40vh;
+      background:rgba(0,0,0,0.6);
+      border-radius:6px; display:flex; flex-direction:column;
+      z-index:20;
     }
-    #chat-log {
-      flex: 1;
-      padding: 6px;
-      overflow-y: auto;
-    }
-    #chat-input-row {
-      display: flex;
-      border-top: 1px solid #333;
-    }
+    #chat-log { flex:1; overflow-y:auto; padding:6px; font-size:12px; }
+    #chat-input-row { display:flex; }
     #chat-input {
-      flex: 1;
-      border: none;
-      padding: 4px;
-      font-size: 11px;
-      background: #020617;
-      color: #e5e7eb;
-      border-radius: 0 0 0 6px;
+      flex:1; background:#000; color:#fff; border:none; padding:4px;
     }
     #chat-send {
-      border: none;
-      padding: 4px 8px;
-      font-size: 11px;
-      background: #3b82f6;
-      color: #fff;
-      border-radius: 0 0 6px 0;
-      cursor: pointer;
+      background:#3b82f6; border:none; color:white; padding:4px 8px;
     }
 
-    /* Mobile controls */
+    /* MOBILE CONTROLS */
     #controls {
-      position: fixed;
-      inset: auto 0 0 0;
-      padding: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      pointer-events: none;
-      z-index: 4;
+      position:fixed; bottom:10px; left:10px; right:10px;
+      display:flex; justify-content:space-between;
+      pointer-events:none;
     }
-    .ctrl-group {
-      pointer-events: auto;
-      display: flex;
-      gap: 6px;
-    }
-    .dpad {
-      display: grid;
-      grid-template-columns: repeat(3, 40px);
-      grid-template-rows: repeat(3, 40px);
-      gap: 4px;
-    }
-    .dpad button,
-    .action-btn {
-      background: rgba(15,23,42,0.8);
-      border: 1px solid #4b5563;
-      color: #e5e7eb;
-      border-radius: 999px;
-      font-size: 14px;
-      cursor: pointer;
-      touch-action: none;
-    }
-    .dpad button {
-      width: 40px;
-      height: 40px;
-    }
-    .action-btn {
-      width: 60px;
-      height: 60px;
-      font-weight: 700;
-    }
-    .dpad button.empty {
-      visibility: hidden;
+    .dpad button, .action-btn {
+      pointer-events:auto;
+      width:50px; height:50px;
+      background:rgba(0,0,0,0.6);
+      border:1px solid #555; border-radius:50%;
+      color:white; font-size:20px;
     }
 
-    /* Admin panel */
+    /* ADMIN PANEL */
     #admin-panel {
-      position: fixed;
-      left: 8px;
-      bottom: 8px;
-      background: rgba(0,0,0,0.75);
-      border-radius: 8px;
-      padding: 6px 8px;
-      font-size: 11px;
-      z-index: 6;
-      max-width: 220px;
-    }
-    #admin-panel h3 {
-      margin: 0 0 4px;
-      font-size: 12px;
-      color: #f97316;
+      position:fixed; bottom:10px; left:10px;
+      background:rgba(0,0,0,0.7);
+      padding:10px; border-radius:6px;
+      display:none; z-index:30;
+      width:200px; font-size:12px;
     }
     #admin-panel input {
-      width: 100%;
-      margin-bottom: 4px;
-      padding: 3px 4px;
-      border-radius: 4px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 11px;
+      width:100%; margin-bottom:6px;
+      background:#000; color:#fff; border:1px solid #444;
+      padding:4px;
     }
     #admin-panel button {
-      margin-right: 4px;
-      margin-top: 2px;
-      padding: 3px 6px;
-      border-radius: 4px;
-      border: none;
-      font-size: 11px;
-      cursor: pointer;
+      width:48%; padding:4px; margin-top:4px;
+      border:none; border-radius:4px; color:white;
     }
-    #admin-kick { background:#ef4444; color:#fff; }
-    #admin-respawn { background:#22c55e; color:#fff; }
+    #kick-btn { background:#ef4444; }
+    #respawn-btn { background:#22c55e; }
   </style>
 </head>
+
 <body>
-  <div id="name-modal">
-    <div id="name-box">
-      <h2>Choose your name</h2>
-      <p style="font-size:12px;color:#9ca3af;margin:0 0 4px;">
-        This name will be saved on this device.
-      </p>
-      <input id="name-input" placeholder="Your name" maxlength="16" />
-      <button id="name-confirm">Enter World</button>
-    </div>
+
+<div id="name-screen">
+  <div id="name-box">
+    <h2 style="color:white;margin:0;">Enter Name</h2>
+    <input id="name-input" maxlength="16">
+    <button id="name-btn">Play</button>
   </div>
+</div>
 
-  <div id="status">Connecting...</div>
-
-  <div id="chat">
-    <div id="chat-log"></div>
-    <div id="chat-input-row">
-      <input id="chat-input" placeholder="Type message..." />
-      <button id="chat-send">Send</button>
-    </div>
+<div id="chat">
+  <div id="chat-log"></div>
+  <div id="chat-input-row">
+    <input id="chat-input">
+    <button id="chat-send">Send</button>
   </div>
+</div>
 
-  <div id="controls">
-    <div class="ctrl-group">
-      <div class="dpad">
-        <button class="empty"></button>
-        <button id="btn-up">▲</button>
-        <button class="empty"></button>
-        <button id="btn-left">◀</button>
-        <button class="empty"></button>
-        <button id="btn-right">▶</button>
-        <button class="empty"></button>
-        <button id="btn-down">▼</button>
-        <button class="empty"></button>
-      </div>
-    </div>
-    <div class="ctrl-group">
-      <button id="btn-build" class="action-btn">Build</button>
-    </div>
+<div id="admin-panel">
+  <h3 style="margin:0;color:#f97316;">Admin</h3>
+  <input id="admin-target" placeholder="Player name">
+  <button id="kick-btn">Kick</button>
+  <button id="respawn-btn">Respawn</button>
+</div>
+
+<div id="controls">
+  <div class="dpad">
+    <button id="up">▲</button>
+    <button id="left">◀</button>
+    <button id="right">▶</button>
+    <button id="down">▼</button>
   </div>
+  <button class="action-btn" id="build">🧱</button>
+</div>
 
-  <div id="admin-panel" style="display:none;">
-    <h3>Admin Panel</h3>
-    <input id="admin-target" placeholder="Target name" />
-    <div>
-      <button id="admin-kick">Kick</button>
-      <button id="admin-respawn">Respawn</button>
-    </div>
-  </div>
+<canvas id="game" width="960" height="540"></canvas>
 
-  <canvas id="game" width="960" height="540"></canvas>
+<script src="https://unpkg.com/netplayjs@0.4.1/dist/netplay.js"></script>
+<script src="game.js"></script>
 
-  <script src="https://unpkg.com/netplayjs@0.4.1/dist/netplay.js"
-          integrity="sha384-6Yb8LWAT488jwK+nIjvD4S5/poq1Xn69NYjH1RXKHoaUOaFJrKQ1rfGQgKm8oQjX"
-          crossorigin="anonymous"></script>
-  <script src="game.js"></script>
 </body>
 </html>
